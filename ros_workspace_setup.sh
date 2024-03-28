@@ -2,7 +2,7 @@
 
 # update submodules
 git submodule sync
-git submodule update --remote --init --recursive
+git submodule update --init --recursive
 
 # install moveit dependencies
 cd ./src/motion_planning
