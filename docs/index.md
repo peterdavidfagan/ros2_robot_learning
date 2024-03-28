@@ -6,7 +6,7 @@ nav_order: 1
 
 # 🤖 ROS 2 Robotics Research Toolkit
 
-![](../assets/robotics_toolkit.jpeg)
+![](./assets/index/robotics_toolkit.jpeg)
 
 This toolkit organises a ROS 2 workspace containing packages for supporting robot learning research applications. Included in this toolkit is documentation for various use cases. Feel free to leave feedback on the official GitHub repository. ❤️  Open-source software.
 
