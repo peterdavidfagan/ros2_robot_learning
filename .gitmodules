@@ -55,3 +55,6 @@
 [submodule "src/data_collection/moveit2_data_collector"]
 	path = src/data_collection/moveit2_data_collector
 	url = git@github.com:peterdavidfagan/moveit2_data_collector.git
+[submodule "src/cameras/moveit2_camera_calibration"]
+	path = src/cameras/moveit2_camera_calibration
+	url = git@github.com:peterdavidfagan/moveit2_camera_calibration.git
