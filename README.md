@@ -2,6 +2,11 @@
 [![foxglove_bridge](https://github.com/peterdavidfagan/ros2_robotics_research_toolkit/actions/workflows/foxglove_bridge.yaml/badge.svg)](https://github.com/peterdavidfagan/ros2_robotics_research_toolkit/blob/ufactory_lite6/.github/workflows/foxglove_bridge.yaml)
 
 # ROS 2 Robot Learning Workspace 🚀 
-This toolkit provides a set of ROS packages with examples of using these packages in robot learning research. For further information please check out the [developer documentation](https://peterdavidfagan.com/ros2_robotics_research_toolkit/).
+This toolkit provides a set of ROS packages with examples of using these packages in robot learning research.
+
+<img src="./assets/robotics_toolkit.jpeg" height=300/>
+
+[**[Documentation]**](https://peterdavidfagan.com/ros2_robotics_research_toolkit/) &ensp;
+
 
 This workspace is intended to be used in conjunction with the following baselines repository [robot_learning_baselines](https://github.com/peterdavidfagan/robot_learning_baselines).
