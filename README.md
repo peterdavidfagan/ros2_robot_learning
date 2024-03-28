@@ -8,5 +8,3 @@ This toolkit provides a set of ROS packages with examples of using these package
 
 [**[Documentation]**](https://peterdavidfagan.com/ros2_robotics_research_toolkit/) &ensp;
 
-
-This workspace is intended to be used in conjunction with the following baselines repository [robot_learning_baselines](https://github.com/peterdavidfagan/robot_learning_baselines).
