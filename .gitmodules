@@ -54,3 +54,6 @@
 	path = src/cameras/zed-ros2-wrapper
 	url = git@github.com:stereolabs/zed-ros2-wrapper.git
 	branch = master
+[submodule "src/motion_planning/moveit2"]
+	path = src/motion_planning/moveit2
+	url = git@github.com:ros-planning/moveit2.git
