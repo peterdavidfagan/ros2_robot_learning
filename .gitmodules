@@ -54,3 +54,6 @@
 [submodule "src/cameras/moveit2_camera_calibration"]
 	path = src/cameras/moveit2_camera_calibration
 	url = git@github.com:peterdavidfagan/moveit2_camera_calibration.git
+[submodule "src/cameras/zed-ros2-wrapper"]
+	path = src/cameras/zed-ros2-wrapper
+	url = git@github.com:stereolabs/zed-ros2-wrapper.git
