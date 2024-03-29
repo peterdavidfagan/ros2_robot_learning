@@ -5,10 +5,6 @@
 	path = src/cameras/image_pipeline
 	url = git@github.com:ros-perception/image_pipeline.git
 	branch = humble
-[submodule "src/motion_planning/moveit2"]
-	path = src/motion_planning/moveit2
-	url = git@github.com:peterdavidfagan/moveit2.git
-	branch = main
 [submodule "src/control/ros2_controllers"]
 	path = src/control/ros2_controllers
 	url = git@github.com:peterdavidfagan/ros2_controllers.git
