@@ -2,13 +2,12 @@ version: "3"
 
 services: 
   servo:
-    image: ghcr.io/peterdavidfagan/lite6_control:rolling
+    image: ghcr.io/peterdavidfagan/lite6_control:iron
     build: 
       context: ../../
       dockerfile: .docker/control/Dockerfile.control
     devices:
       - "/dev:/dev"
-      #- ../../:/root/lite6_ws
     privileged: true
     network_mode: "host"
     cap_add:
