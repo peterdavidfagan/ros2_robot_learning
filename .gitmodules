@@ -1,10 +1,6 @@
 [submodule "src/audio/ros2_whisper"]
 	path = src/audio/ros2_whisper
 	url = git@github.com:peterdavidfagan/ros2_whisper.git
-[submodule "src/cameras/zed-ros2-wrapper"]
-	path = src/cameras/zed-ros2-wrapper
-	url = git@github.com:peterdavidfagan/zed-ros2-wrapper.git
-	branch = rolling # also work with humble
 [submodule "src/cameras/image_pipeline"]
 	path = src/cameras/image_pipeline
 	url = git@github.com:ros-perception/image_pipeline.git
