@@ -57,3 +57,4 @@
 [submodule "src/motion_planning/moveit2"]
 	path = src/motion_planning/moveit2
 	url = git@github.com:ros-planning/moveit2.git
+	branch = iron
