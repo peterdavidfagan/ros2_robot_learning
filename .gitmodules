@@ -57,3 +57,4 @@
 [submodule "src/cameras/zed-ros2-wrapper"]
 	path = src/cameras/zed-ros2-wrapper
 	url = git@github.com:stereolabs/zed-ros2-wrapper.git
+	branch = master
