@@ -1,9 +1,9 @@
-ARG ROS_DISTRO=rolling
+ARG ROS_DISTRO=iron
 FROM ros:${ROS_DISTRO}-ros-base
 MAINTAINER Peter David Fagan "peterdavidfagan@gmail.com"
 
 # set default DDS to Cyclone
-ENV ROS_DISTRO=rolling
+ENV ROS_DISTRO=iron
 ENV RMW_IMPLEMENTATION rmw_cyclonedds_cpp
 
 # set up ROS workspace

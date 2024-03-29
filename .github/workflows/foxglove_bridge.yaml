@@ -49,4 +49,4 @@ jobs:
           file: .docker/foxglove/Dockerfile.foxglove_bridge
           push: true
           no-cache: true
-          tags: ${{ env.REGISTRY }}/${{ env.ORG_NAME }}/${{ env.IMAGE_NAME }}:rolling
+          tags: ${{ env.REGISTRY }}/${{ env.ORG_NAME }}/${{ env.IMAGE_NAME }}:iron

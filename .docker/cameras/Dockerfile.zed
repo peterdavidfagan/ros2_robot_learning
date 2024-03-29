@@ -2,7 +2,7 @@ FROM nvidia/cuda:12.1.0-devel-ubuntu22.04
 MAINTAINER Peter David Fagan "peterdavidfagan@gmail.com"
 
 # set default DDS to Cyclone
-ENV ROS_DISTRO=rolling
+ENV ROS_DISTRO=iron
 ENV RMW_IMPLEMENTATION rmw_cyclonedds_cpp
 ENV NVIDIA_DRIVER_CAPABILITIES \
     ${NVIDIA_DRIVER_CAPABILITIES:+$NVIDIA_DRIVER_CAPABILITIES,}compute,video,utility
