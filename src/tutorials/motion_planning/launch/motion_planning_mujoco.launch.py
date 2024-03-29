@@ -34,7 +34,7 @@ def generate_launch_description():
     # declare parameter for using fake controller
     use_fake_hardware = DeclareLaunchArgument(
         "use_fake_hardware",
-        default_value="false",
+        default_value="true",
         description="Use fake hardware",
     )
 
@@ -43,9 +43,30 @@ def generate_launch_description():
             cmd=["ros2", "launch", "foxglove_bridge", "foxglove_bridge_launch.xml"],
             output="screen",
             )
+    
+    # for some reason with docker its quite slow to stream data
+    #start_foxglove_studio = ExecuteProcess(
+    #        cmd=["docker", "compose", "-f", DOCKER_COMPOSE_FILE_PATH, "up"],
+    #        output="screen",
+    #        )
+    
+    #open_foxglove_studio = ExecuteProcess(
+    #        cmd=["xdg-open", "http://localhost:8080"],
+    #        output="screen",
+    #        )
+
+    start_mujoco_sim = ExecuteProcess(
+            cmd=["ros2", "launch", "mujoco_ros", "mjsim.launch.py"],
+            output="screen",
+            )
+
+    start_ros_2_controllers = ExecuteProcess(
+        cmd=["ros2", "launch", "panda_control_demos", "control_server.launch.py"],
+        output="screen",
+        )
 
     start_motion_planning_prerequisites = ExecuteProcess(
-            cmd=["ros2", "launch", "panda_motion_planning_demos", "motion_planning_prerequisites.launch.py", "use_fake_hardware:=false"],
+        cmd=["ros2", "launch", "panda_motion_planning_demos", "motion_planning_prerequisites.launch.py"],
         output="screen",
         )
 
@@ -93,8 +114,22 @@ def generate_launch_description():
             use_fake_hardware,
             
             # launching processes
-            start_foxglove_bridge,
-            start_motion_planning_prerequisites,
+            start_mujoco_sim,
+            RegisterEventHandler(
+                OnProcessStart(
+                    target_action=start_mujoco_sim,
+                    on_start=[
+                        TimerAction(
+                            period=1.0, 
+                            actions=[
+                                start_ros_2_controllers,
+                                start_motion_planning_prerequisites,
+                                ]
+                            ),
+                        ]
+                )
+            ),
+
             RegisterEventHandler(
                 OnProcessStart(
                     target_action=start_motion_planning_prerequisites,
