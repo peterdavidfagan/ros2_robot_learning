@@ -2,7 +2,7 @@ version: "3"
 
 services: 
   moveit:
-    image: ghcr.io/peterdavidfagan/lite6_motion_planning:iron
+    image: ghcr.io/peterdavidfagan/lite6_motion_planning:humble
     build: 
       context: ../../
       dockerfile: .docker/motion_planning/Dockerfile.motion_planning
