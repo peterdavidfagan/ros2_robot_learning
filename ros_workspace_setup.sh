@@ -17,7 +17,7 @@ cpack -G DEB
 sudo dpkg -i libfranka*.deb
 cd ../..
 
-# source iron installation and install middleware
+# source humble installation and install middleware
 source /opt/ros/humble/setup.bash
 sudo apt install ros-$ROS_DISTRO-rmw-cyclonedds-cpp -y
 
