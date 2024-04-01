@@ -2,7 +2,7 @@ name: foxglove_bridge
 
 on:
   push:
-    branches: ['ufactory_lite6']
+    branches: ['franka_emika_panda']
     paths:
       - .gitmodules
       - .docker/foxglove/Dockerfile.foxglove_bridge
@@ -49,4 +49,4 @@ jobs:
           file: .docker/foxglove/Dockerfile.foxglove_bridge
           push: true
           no-cache: true
-          tags: ${{ env.REGISTRY }}/${{ env.ORG_NAME }}/${{ env.IMAGE_NAME }}:iron
+          tags: ${{ env.REGISTRY }}/${{ env.ORG_NAME }}/${{ env.IMAGE_NAME }}:humble
