@@ -18,7 +18,7 @@
 [submodule "src/control/franka_ros2"]
 	path = src/control/franka_ros2
 	url = git@github.com:peterdavidfagan/franka_ros2.git
-	branch = moveit_config_builder
+	branch = main
 [submodule "src/control/topic_based_ros2_control"]
 	path = src/control/topic_based_ros2_control
 	url = git@github.com:PickNikRobotics/topic_based_ros2_control.git
