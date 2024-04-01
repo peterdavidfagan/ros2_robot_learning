@@ -58,3 +58,6 @@
 	path = src/motion_planning/moveit2
 	url = git@github.com:ros-planning/moveit2.git
 	branch = iron
+[submodule "libfranka"]
+	path = libfranka
+	url = git@github.com:peterdavidfagan/libfranka.git
