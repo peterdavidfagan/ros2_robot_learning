@@ -5,7 +5,7 @@ on:
     branches: ['franka_emika_panda']
     paths:
       - .gitmodules
-      - src/control
+      - src/**
       - .docker/control/Dockerfile.control
       - .github/workflows/control.yaml
   workflow_dispatch:
