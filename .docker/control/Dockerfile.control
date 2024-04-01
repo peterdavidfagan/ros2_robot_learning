@@ -1,9 +1,9 @@
-ARG ROS_DISTRO=iron
+ARG ROS_DISTRO=humble
 FROM ros:${ROS_DISTRO}-ros-base
 MAINTAINER Peter David Fagan "peterdavidfagan@gmail.com"
 
 # set default DDS to Cyclone
-ENV ROS_DISTRO=iron
+ENV ROS_DISTRO=humble
 ENV RMW_IMPLEMENTATION rmw_cyclonedds_cpp
 
 # install neovim for development
@@ -11,41 +11,17 @@ RUN apt-get update && \
     apt-get install -y neovim && \
     rm -rf /var/lib/apt/lists/*
 
-# install libfranka
-RUN apt update && apt upgrade -y && \
-    apt install -y  build-essential cmake git libpoco-dev libeigen3-dev && \
-    git clone --recursive https://github.com/frankaemika/libfranka.git --branch 0.9.0 && \
-    cd libfranka && \
-    mkdir build && cd build && \
-    cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF  .. && \
-    cmake --build . -j$(nproc) && \
-    cpack -G DEB && \
-    dpkg -i libfranka-*.deb
-
 # set up ROS workspace
 ENV ROS_UNDERLAY /root/panda_ws/install
 WORKDIR $ROS_UNDERLAY/..
 COPY src/control ./src/control
 COPY src/motion_planning ./src/motion_planning
 COPY src/tutorials ./src/tutorials
+COPY libfranka ./libfranka
+COPY ros_workspace_setup.sh ./ros_workspace_setup.sh
 
-# install moveit dependencies
-RUN cd src/motion_planning && \
-    for repo in moveit2/moveit2.repos $(f="moveit2/moveit2_$ROS_DISTRO.repos"; test -r $f && echo $f); do vcs import < "$repo"; done && \
-    rosdep install -r --from-paths . --ignore-src --rosdistro $ROS_DISTRO -y
-
-RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
-    apt-get update && \
-    apt-get install -y ros-${ROS_DISTRO}-ament-cmake-clang-format ros-${ROS_DISTRO}-rmw-cyclonedds-cpp ros-${ROS_DISTRO}-moveit && \
-    rosdep update && \
-    DEBIAN_FRONTEND=noninteractive \
-    rosdep install --from-paths . --ignore-src -r -y --rosdistro ${ROS_DISTRO} && \
-    colcon build --parallel-workers $(nproc) --symlink-install \
-    --event-handlers console_direct+ --base-paths src \
-    --cmake-args ' -DCMAKE_BUILD_TYPE=Release' \
-    ' -DCMAKE_LIBRARY_PATH=/usr/local/cuda-11/lib64' \
-    ' -DCMAKE_CXX_FLAGS="-Wl,--allow-shlib-undefined"' \
-    ' --no-warn-unused-cli' && \ 
+# set up workspace
+RUN ./ros_workspace_setup.sh && \
     rm -rf /var/lib/apt/lists/*
 
 # create entrypoint

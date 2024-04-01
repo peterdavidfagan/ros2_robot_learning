@@ -50,7 +50,18 @@
 [submodule "src/motion_planning/moveit2"]
 	path = src/motion_planning/moveit2
 	url = git@github.com:ros-planning/moveit2.git
-	branch = iron
+	branch = main
 [submodule "libfranka"]
 	path = libfranka
 	url = git@github.com:peterdavidfagan/libfranka.git
+[submodule "src/control/ros2_control"]
+	path = src/control/ros2_control
+	url = git@github.com:ros-controls/ros2_control.git
+	branch = humble
+[submodule "src/control/ros2_controllers"]
+	path = src/control/ros2_controllers
+	branch = humble
+	url = git@github.com:ros-controls/ros2_controllers.git
+[submodule "src/motion_planning/generate_parameter_library"]
+	path = src/motion_planning/generate_parameter_library
+	url = git@github.com:PickNikRobotics/generate_parameter_library.git
