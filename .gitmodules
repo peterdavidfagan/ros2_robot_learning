@@ -62,3 +62,6 @@
 [submodule "src/motion_planning/generate_parameter_library"]
 	path = src/motion_planning/generate_parameter_library
 	url = git@github.com:PickNikRobotics/generate_parameter_library.git
+[submodule "libfranka"]
+	path = libfranka
+	url = git@github.com:tingelst/libfranka.git
