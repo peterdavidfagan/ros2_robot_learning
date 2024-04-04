@@ -2,7 +2,7 @@
 [![foxglove_bridge](https://github.com/peterdavidfagan/ros2_robotics_research_toolkit/actions/workflows/foxglove_bridge.yaml/badge.svg)](https://github.com/peterdavidfagan/ros2_robotics_research_toolkit/blob/ufactory_lite6/.github/workflows/foxglove_bridge.yaml)
 
 # ROS 2 Robot Learning Workspace 
-This toolkit provides a set of ROS packages with examples of using these packages in robot learning research.
+This toolkit provides a set of ROS packages with examples of using these packages in robot learning research. An official release of this workspace will be published for the Franka Robotics Panda robot in the coming weeks at which point all demos will be tested and verified for fixed versions of Franka Robotics firmware. 
 
 <img src="./assets/robotics_toolkit.jpeg" height=300/>
 
