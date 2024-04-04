@@ -13,7 +13,7 @@ This toolkit provides a set of ROS packages with examples of using these package
 
 | OS | ROS 2 Version | Franka Robot | Franka System Version | Libfranka Version |
 | --- | --- | --- | --- | --- |
-| Ubuntu 20.04 | Humble | Panda | 4.2.2 | custom backport of latest libfranka |
+| Ubuntu 22.04 | Humble | Panda | 4.2.2 | custom backport |
 
 
 # Docker Support
