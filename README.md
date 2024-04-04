@@ -8,3 +8,12 @@ This toolkit provides a set of ROS packages with examples of using these package
 
 [**[Documentation]**](https://peterdavidfagan.com/ros2_robotics_research_toolkit/) &ensp;
 
+
+# Supported Franka Robotics Versions
+
+| OS | ROS 2 Version | Franka Robot | Franka System Version | Libfranka Version |
+| Ubuntu 20.04 | Humble | Panda | 4.2.2 | custom backport of latest libfranka |
+
+
+# Docker Support
+In order to avoid users having to manage the installation and building of this ROS workspace I am releasing Docker containers which should function across various Ubuntu operating systems. Where the host system requires specific dependencies or settings (e.g. realtime kernel patch) I provide a setup shell script to configure the host system, further details to be added to the official documentation.
