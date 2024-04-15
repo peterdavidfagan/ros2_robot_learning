@@ -3,6 +3,7 @@ version: "3"
 services: 
   zed_mini:
     image: ghcr.io/peterdavidfagan/zed2:humble
+    container_name: zed_mini
     build: 
       context: ../../
       dockerfile: .docker/cameras/Dockerfile.zed
