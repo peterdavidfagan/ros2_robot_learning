@@ -13,7 +13,7 @@ services:
     privileged: true
     runtime: nvidia
     network_mode: "host"
-    command: ros2 launch zed_wrapper zed2i.launch.py
+    command: ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed2i serial_number:=32907025
     deploy:
       placement:
         constraints:
