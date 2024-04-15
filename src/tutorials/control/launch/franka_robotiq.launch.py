@@ -128,7 +128,7 @@ def generate_launch_description():
         name='joint_state_publisher',
         output='screen',
         parameters=[
-                {'source_list': ['/panda/panda_state_broadcaster/joint_states', '/robotiq/robotiq_state_broadcaster/joint_states'],
+                {'source_list': ['/panda/joint_states', '/robotiq/joint_states'],
                  'rate': 30}],
     )
 
