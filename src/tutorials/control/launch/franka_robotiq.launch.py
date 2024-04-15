@@ -147,9 +147,9 @@ def generate_launch_description():
         ]
     load_robotiq_controllers = []
     for controller in [
-        'robotiq_state_broadcaster',
-        'robotiq_gripper_controller',
         'robotiq_activation_controller',
+        'robotiq_gripper_controller',
+        'robotiq_state_broadcaster',
     ]:
         load_robotiq_controllers += [
             ExecuteProcess(
