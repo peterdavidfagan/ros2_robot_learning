@@ -2,7 +2,7 @@ version: "3"
 
 services: 
   zed2:
-    image: ghcr.io/peterdavidfagan/zed2:rolling
+    image: ghcr.io/peterdavidfagan/zed2:humble
     build: 
       context: ../../
       dockerfile: .docker/cameras/Dockerfile.zed
