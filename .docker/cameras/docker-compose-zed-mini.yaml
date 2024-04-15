@@ -1,7 +1,7 @@
 version: "3"
 
 services: 
-  zed2:
+  zed_mini:
     image: ghcr.io/peterdavidfagan/zed2:humble
     build: 
       context: ../../
@@ -13,7 +13,7 @@ services:
     privileged: true
     runtime: nvidia
     network_mode: "host"
-    command: ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zedm serial_number:=15102076
+    command: ros2 launch zed_wrapper zed_camera.launch.py camera_name:=zed_mini camera_model:=zedm node_name:=zed_mini serial_number:=15102076
     deploy:
       placement:
         constraints:
