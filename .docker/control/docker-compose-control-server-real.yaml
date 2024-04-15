@@ -16,7 +16,7 @@ services:
       rtprio: 70
       rttime: -1 # corresponds to 'unlimited'
       memlock: 8428281856
-    command: ros2 launch panda_control_demos control_server.launch.py use_fake_hardware:=false
+    command: ros2 launch panda_control_demos franka_robotiq.launch.py use_fake_hardware:=false
     deploy:
       restart_policy: 
         condition: any
