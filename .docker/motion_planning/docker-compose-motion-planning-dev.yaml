@@ -1,0 +1,20 @@
+version: "3"
+
+services: 
+  moveit:
+    image: ghcr.io/peterdavidfagan/panda_motion_planning:humble
+    build: 
+      context: ../../
+      dockerfile: .docker/motion_planning/Dockerfile.motion_planning
+    environment:
+      - DISPLAY=${DISPLAY}
+      - XAUTHORITY=${DOCKER_XAUTH}
+    volumes:
+      - /tmp/.X11-unix:/tml/.X11-unix:rw
+      - ${DOCKER_XAUTH}:${DOCKER_XAUTH}
+      - ./:/root/panda_ws/
+    devices:
+      - "/dev:/dev"
+    privileged: true
+    network_mode: "host"
+    command: ros2 launch panda_motion_planning_demos motion_planning_prerequisites.launch.py
