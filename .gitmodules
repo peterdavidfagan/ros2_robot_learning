@@ -12,13 +12,6 @@
 	path = src/control/serial
 	url = git@github.com:tylerjw/serial.git
 	branch = ros2
-[submodule "src/motion_planning/franka_robotiq"]
-	path = src/motion_planning/franka_robotiq
-	url = git@github.com:peterdavidfagan/franka_robotiq.git
-[submodule "src/control/franka_ros2"]
-	path = src/control/franka_ros2
-	url = git@github.com:peterdavidfagan/franka_ros2.git
-	branch = main
 [submodule "src/control/topic_based_ros2_control"]
 	path = src/control/topic_based_ros2_control
 	url = git@github.com:PickNikRobotics/topic_based_ros2_control.git
@@ -62,6 +55,6 @@
 [submodule "src/motion_planning/generate_parameter_library"]
 	path = src/motion_planning/generate_parameter_library
 	url = git@github.com:PickNikRobotics/generate_parameter_library.git
-[submodule "libfranka"]
-	path = libfranka
-	url = git@github.com:tingelst/libfranka.git
+[submodule "src/vendor/Universal_Robots_ROS2_Driver"]
+	path = src/vendor/Universal_Robots_ROS2_Driver
+	url = git@github.com:UniversalRobots/Universal_Robots_ROS2_Driver.git
