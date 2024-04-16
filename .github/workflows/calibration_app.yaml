@@ -46,7 +46,7 @@ jobs:
         with:
           context: .
           platforms: linux/amd64
-          file: .docker/Dockerfile
+          file: .docker/camera_calibration_app/Dockerfile
           push: true
           no-cache: true
           tags: ${{ env.REGISTRY }}/${{ env.ORG_NAME }}/${{ env.IMAGE_NAME }}:humble
