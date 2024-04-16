@@ -12,7 +12,7 @@ services:
     volumes:
       - /tmp/.X11-unix:/tml/.X11-unix:rw
       - ${DOCKER_XAUTH}:${DOCKER_XAUTH}
-      - ../../:/root/panda_ws/
+      - ../../src:/root/panda_ws/src
     devices:
       - "/dev:/dev"
     privileged: true
