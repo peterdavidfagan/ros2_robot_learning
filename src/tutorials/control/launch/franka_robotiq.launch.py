@@ -51,15 +51,6 @@ def generate_launch_description():
             .to_moveit_configs()
             )
 
-    panda_state_publisher = Node(
-        package="robot_state_publisher",
-        executable="robot_state_publisher",
-        name="panda_state_publisher",
-        output="both",
-        parameters=[moveit_config.robot_description],
-        namespace="panda",
-    )
-
     panda_controller_config = os.path.join(
         get_package_share_directory("franka_robotiq_moveit_config"),
         "config",
@@ -98,15 +89,6 @@ def generate_launch_description():
         )
     }
 
-    robotiq_state_publisher = Node(
-        package="robot_state_publisher",
-        executable="robot_state_publisher",
-        name="robotiq_state_publisher",
-        output="both",
-        parameters=[robotiq_description_param],
-        namespace="robotiq",
-    )
-
     robotiq_controller_config = os.path.join(
         get_package_share_directory("franka_robotiq_moveit_config"),
         "config",
@@ -120,18 +102,6 @@ def generate_launch_description():
         output="both",
         namespace="robotiq",
     )
-
-    # overall joint state including both panda and robotiq
-    joint_state_publisher = Node(
-        package='joint_state_publisher',
-        executable='joint_state_publisher',
-        name='joint_state_publisher',
-        output='screen',
-        parameters=[
-                {'source_list': ['/panda/joint_states', '/robotiq/joint_states'],
-                 'rate': 30}],
-    )
-
 
     load_panda_controllers = []
     for controller in [
@@ -164,10 +134,7 @@ def generate_launch_description():
             robot_ip, 
             use_gripper,
             use_fake_hardware,
-            joint_state_publisher,
-            panda_state_publisher,
             panda_control_node,
-            robotiq_state_publisher,
             robotiq_control_node,
         ]
         + load_panda_controllers

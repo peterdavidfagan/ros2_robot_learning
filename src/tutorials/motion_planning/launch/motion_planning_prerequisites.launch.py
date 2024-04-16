@@ -6,6 +6,7 @@ This file is used to interactively script motion planning with a jupyter noteboo
 
 import os
 from launch import LaunchDescription
+from launch.conditions import IfCondition
 from launch.launch_description_sources import load_python_launch_file_as_module
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node, SetParameter
@@ -33,7 +34,7 @@ def generate_launch_description():
     # declare parameter for using fake controller
     use_fake_hardware = DeclareLaunchArgument(
         "use_fake_hardware",
-        default_value="true",
+        default_value="false",
         description="Use fake hardware",
     )
 
@@ -54,18 +55,22 @@ def generate_launch_description():
             .to_moveit_configs()
             )
 
-    # if we are using fake hardware adjust joint state topic
-    if not LaunchConfiguration("use_fake_hardware"):
-        joint_state_topic = "franka/joint_states"
-    else:
-        joint_state_topic = "/mujoco_joint_states"
-
     static_tf = Node(
         package="tf2_ros",
         executable="static_transform_publisher",
         name="static_transform_publisher",
         output="log",
         arguments=["0.0", "0.0", "0.0", "0.0", "0.0", "0.0", "world", "panda_link0"],
+    )
+    
+    joint_state_publisher = Node(
+        package='joint_state_publisher',
+        executable='joint_state_publisher',
+        name='joint_state_publisher',
+        output='screen',
+        parameters=[
+                {'source_list': ['/panda/joint_states', '/robotiq/joint_states'],
+                 'rate': 30}],
     )
 
     robot_state_publisher = Node(
@@ -76,7 +81,6 @@ def generate_launch_description():
         parameters=[
             moveit_config.robot_description,
             ],
-        remappings=[("joint_states", joint_state_topic)],
     )
 
 
@@ -86,6 +90,7 @@ def generate_launch_description():
             use_gripper,
             use_fake_hardware,
             static_tf,
+            joint_state_publisher,
             robot_state_publisher,
         ]
         )

@@ -39,11 +39,6 @@ def generate_launch_description():
     )
 
 
-    start_foxglove_bridge = ExecuteProcess(
-            cmd=["ros2", "launch", "foxglove_bridge", "foxglove_bridge_launch.xml"],
-            output="screen",
-            )
-
     start_motion_planning_prerequisites = ExecuteProcess(
             cmd=["ros2", "launch", "panda_motion_planning_demos", "motion_planning_prerequisites.launch.py", "use_fake_hardware:=false"],
         output="screen",
@@ -57,10 +52,7 @@ def generate_launch_description():
                     "robotiq_gripper": LaunchConfiguration("use_gripper"),
                     "use_fake_hardware": LaunchConfiguration("use_fake_hardware"),
                     })
-            .robot_description_semantic("config/panda.srdf.xacro", 
-                mappings={
-                    "robotiq_gripper": LaunchConfiguration("use_gripper"),
-                    })
+            .robot_description_semantic("config/panda.srdf.xacro")
             .trajectory_execution("config/moveit_controllers.yaml")
             .moveit_cpp(
                 file_path=get_package_share_directory("panda_motion_planning_demos")
@@ -73,7 +65,7 @@ def generate_launch_description():
     moveit_py_node = Node(
         name="moveit_py",
         package="panda_motion_planning_demos",
-        executable="scripted_pick_place.py",
+        executable="motion_planning.py",
         output="both",
         arguments=[
             "--ros-args",
@@ -93,7 +85,6 @@ def generate_launch_description():
             use_fake_hardware,
             
             # launching processes
-            start_foxglove_bridge,
             start_motion_planning_prerequisites,
             RegisterEventHandler(
                 OnProcessStart(
