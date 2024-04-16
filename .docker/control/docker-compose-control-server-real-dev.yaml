@@ -1,0 +1,28 @@
+version: "3"
+
+services: 
+  control_server:
+    image: ghcr.io/peterdavidfagan/panda_control:humble
+    container_name: franka_robotiq_control_server
+    build: 
+      context: ../../
+      dockerfile: .docker/control/Dockerfile.control
+    volumes:
+      - ../../src:/root/panda_ws/src
+    devices:
+      - "/dev:/dev"
+    privileged: true
+    network_mode: "host"
+    cap_add:
+      - SYS_NICE
+    ulimits:
+      rtprio: 70
+      rttime: -1 # corresponds to 'unlimited'
+      memlock: 8428281856
+    command: ros2 launch panda_control_demos franka_robotiq.launch.py use_fake_hardware:=false
+    deploy:
+      restart_policy: 
+        condition: any
+      placement:
+        constraints:
+          - node.hostname == robot
