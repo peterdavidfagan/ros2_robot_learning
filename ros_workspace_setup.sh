@@ -12,7 +12,7 @@ mkdir build && cd build
 cmake ..
 make
 sudo make install
-cd ..
+cd ../..
 
 # source humble installation and install middleware
 source /opt/ros/humble/setup.bash
