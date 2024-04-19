@@ -1,9 +1,15 @@
 #!/bin/bash
 set -e
 
-# install libfranka
+# install ur client library
 sudo apt update && apt upgrade -y || true
 sudo apt install -y  build-essential cmake git libpoco-dev libeigen3-dev
+cd Universal_Robots_Client_Library
+mkdir build && cd build
+cmake ..
+make
+sudo make install
+cd ..
 
 # source humble installation and install middleware
 source /opt/ros/humble/setup.bash
