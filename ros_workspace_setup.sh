@@ -5,6 +5,9 @@ set -e
 sudo apt update && apt upgrade -y || true
 sudo apt install -y  build-essential cmake git libpoco-dev libeigen3-dev
 cd Universal_Robots_Client_Library
+if [ -d "./build" ]; then
+	rm -rf build
+fi
 mkdir build && cd build
 cmake ..
 make
@@ -30,5 +33,5 @@ rosdep install --from-paths . --ignore-src --rosdistro $ROS_DISTRO -r -y
 cd ..
 
 # build the workspace
-colcon build --packages-ignore libfranka libfranka-common
+colcon build
 source ./install/setup.bash
