@@ -1,4 +1,4 @@
-name: ur_motion_planning
+name: motion_planning
 
 on:
   push:

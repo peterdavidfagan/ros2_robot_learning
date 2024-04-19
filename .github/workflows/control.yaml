@@ -1,4 +1,4 @@
-name: ur_control
+name: control
 
 on:
   push:
