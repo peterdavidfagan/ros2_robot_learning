@@ -1,4 +1,4 @@
-name: transporter_data_collection_app
+name: moveit2_data_collection
 
 on:
   push:

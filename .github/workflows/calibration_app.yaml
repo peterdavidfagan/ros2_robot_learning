@@ -1,4 +1,4 @@
-name: calibration_app
+name: moveit2_camera_calibration
 
 on:
   push:
