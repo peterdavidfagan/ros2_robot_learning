@@ -1,8 +1,8 @@
-name: control
+name: ur_control
 
 on:
   push:
-    branches: ['franka_emika_panda']
+    branches: ['ur']
     paths:
       - .gitmodules
       - src/**
@@ -13,7 +13,7 @@ on:
 env:
   REGISTRY: ghcr.io
   ORG_NAME: peterdavidfagan
-  IMAGE_NAME: panda_control
+  IMAGE_NAME: ur_control
 
 jobs:
   build-and-push-image:

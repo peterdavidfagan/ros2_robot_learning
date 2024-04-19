@@ -58,3 +58,10 @@
 [submodule "src/vendor/Universal_Robots_ROS2_Driver"]
 	path = src/vendor/Universal_Robots_ROS2_Driver
 	url = git@github.com:UniversalRobots/Universal_Robots_ROS2_Driver.git
+[submodule "src/control/Universal_Robots_ROS2_Driver"]
+	path = src/control/Universal_Robots_ROS2_Driver
+	url = git@github.com:UniversalRobots/Universal_Robots_ROS2_Driver.git
+	branch = humble
+[submodule "src/control/Universal_Robots_Client_Library"]
+	path = src/control/Universal_Robots_Client_Library
+	url = git@github.com:UniversalRobots/Universal_Robots_Client_Library.git

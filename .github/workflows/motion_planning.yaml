@@ -1,8 +1,8 @@
-name: motion_planning
+name: ur_motion_planning
 
 on:
   push:
-    branches: ['franka_emika_panda']
+    branches: ['ur']
     paths:
       - .gitmodules
       - src/**
@@ -13,7 +13,7 @@ on:
 env:
   REGISTRY: ghcr.io
   ORG_NAME: peterdavidfagan
-  IMAGE_NAME: panda_motion_planning
+  IMAGE_NAME: ur_motion_planning
 
 jobs:
   build-and-push-image:
