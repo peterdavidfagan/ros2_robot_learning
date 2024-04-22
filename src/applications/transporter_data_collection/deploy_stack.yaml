@@ -1,6 +1,6 @@
 version: "3"
 
-services: 
+services:
   control_server:
    image: ghcr.io/peterdavidfagan/panda_control:humble
    container_name: control_server
@@ -11,6 +11,8 @@ services:
       dockerfile: .docker/control/Dockerfile.control
     devices:
       - "/dev:/dev"
+    networks:
+      - ros_application
     privileged: true
     cap_add:
       - SYS_NICE
@@ -32,11 +34,14 @@ services:
       dockerfile: .docker/cameras/Dockerfile.zed
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
+    volumes:
+      - ./config/zed2i.yaml:/root/zed_ws/src/cameras/zed-ros2-wrapper/zed_wrapper/config/zed2i.yaml
     devices:
       - "/dev:/dev"
+    networks:
+      - ros_application
     privileged: true
     runtime: nvidia
-    network_mode: "host"
     command: ros2 launch zed_wrapper zed_camera.launch.py camera_name:=zed2i_1 camera_model:=zed2i node_name:=zed_camera serial_number:=35215462
     deploy:
       placement:
