@@ -1,47 +1,30 @@
 camera_info_topic: /zed2i/zed_node/rgb_raw/camera_info
 camera_topic: /zed2i/zed_node/rgb_raw/image_raw_color
-eye_to_hand_calibration_service: /camera_calibration/run_eye_to_hand_calibration
-eye_in_hand_calibration_service: /camera_calibration/run_eye_in_hand_calibration
 
 charuco:
   squares_x: 14
   squares_y: 9
   square_length: 0.02
   marker_length: 0.015
+  
+workspace:
+  x_min: -0.05
+  x_max: 0.05
+  y_min: -0.05
+  y_max: 0.05
+  z_min: -0.05
+  z_max: 0.05
+  rot_x_min: -5.0
+  rot_x_max: 5.0
+  rot_y_min: -5.0
+  rot_y_max: 5.0
+  rot_z_min: -5.0
+  rot_z_max: 5.0
 
 eye_to_hand_calibration:
   num_samples: 25 # for debug purposes
   sample_delay: 0.4
 
-  workspace:
-    x_min: 0.35
-    x_max: 0.45
-    y_min: -0.1
-    y_max: 0.1
-    z_min: 0.3
-    z_max: 0.4 
-    rot_x_min: 160.0
-    rot_x_max: 200.0
-    rot_y_min: -90.0
-    rot_y_max: -135.0
-    rot_z_min: -5.0
-    rot_z_max: 5.0
-
-
 eye_in_hand_calibration:
   num_samples: 25 # for debug purposes
   sample_delay: 0.4
-
-  workspace:
-    x_min: 0.35
-    x_max: 0.45
-    y_min: -0.1
-    y_max: 0.1
-    z_min: 0.3
-    z_max: 0.4 
-    rot_x_min: 160.0
-    rot_x_max: 200.0
-    rot_y_min: -90.0
-    rot_y_max: -135.0
-    rot_z_min: -5.0
-    rot_z_max: 5.0
