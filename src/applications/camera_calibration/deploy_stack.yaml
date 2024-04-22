@@ -74,6 +74,7 @@ services:
     volumes:
       - /tmp/.X11-unix:/tml/.X11-unix:rw
       - ${DOCKER_XAUTH}:${DOCKER_XAUTH}
+      - ./results:/root/calibration_ws/src/moveit2_camera_calibration/results
     networks:
       - ros_application
     runtime: nvidia
