@@ -1,5 +1,5 @@
+camera_image_topic: /zed2i/zed_node/rgb_raw/image_raw_color
 camera_info_topic: /zed2i/zed_node/rgb_raw/camera_info
-camera_topic: /zed2i/zed_node/rgb_raw/image_raw_color
 
 charuco:
   squares_x: 14
