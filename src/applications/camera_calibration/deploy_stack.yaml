@@ -42,7 +42,7 @@ services:
       - ros_application
     privileged: true
     runtime: nvidia
-    command: ros2 launch zed_wrapper zed_camera.launch.py camera_name:=zed2i_1 camera_model:=zed2i node_name:=zed_camera serial_number:=35215462
+    command: ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed2i node_name:=zed_camera
     deploy:
       placement:
         constraints:

@@ -6,6 +6,7 @@
         general:
             camera_model: 'zed2i'
             camera_name: 'zed2i' # usually overwritten by launch file
+            serial_number: 35215462
             grab_resolution: 'HD2K' # Maximize resolution for calibration
             grab_frame_rate: 30 # ZED SDK internal grabbing rate
 
