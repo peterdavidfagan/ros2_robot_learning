@@ -77,6 +77,6 @@ RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
     rm -rf /var/lib/apt/lists/* 
 
 # create entrypoint
-COPY .docker/ros_entrypoint.sh /sbin/ros_entrypoint.sh
+COPY .docker/cameras/ros_entrypoint.sh /sbin/ros_entrypoint.sh
 RUN sudo chmod 755 /sbin/ros_entrypoint.sh
 ENTRYPOINT ["/sbin/ros_entrypoint.sh"]
