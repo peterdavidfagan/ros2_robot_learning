@@ -16,7 +16,7 @@ ENV ROS_UNDERLAY /root/panda_ws/install
 WORKDIR $ROS_UNDERLAY/..
 COPY src/control ./src/control
 COPY src/motion_planning ./src/motion_planning
-COPY src/tutorials ./src/tutorials
+COPY src/applications ./src/applications
 COPY libfranka ./libfranka
 COPY ros_workspace_setup.sh ./ros_workspace_setup.sh
 
