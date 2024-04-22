@@ -8,6 +8,5 @@ source "$ROS_UNDERLAY/setup.bash" --
 colcon build --packages-select zed_wrapper
 source "$ROS_UNDERLAY/setup.bash" --
 
-
 # excute docker command
 exec "$@"
