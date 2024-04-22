@@ -7,21 +7,29 @@ LAPTOP_IP="192.168.1.11"
 
 echo "Welcome to the lite6_ws setup process."
 
+# install docker
+echo -e "\nInstall docker \n"
+
+apt-get update
+apt-get install ca-certificates curl gnupg
+install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+chmod a+r /etc/apt/keyrings/docker.gpg
+echo \
+  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+apt-get update
+apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
 # ensure GUI window is accessible from container
 echo -e "Set Docker Xauth for x11 forwarding \n"
 
 export DOCKER_XAUTH=/tmp/.docker.xauth
+echo "export DOCKER_XAUTH=/tmp/.docker.xauth" >> ~/.bashrc
 rm $DOCKER_XAUTH
 touch $DOCKER_XAUTH
 xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $DOCKER_XAUTH nmerge -
-
-# build client server container
-read -p "Do you want to rebuild the container image? (yes/no): " first_time
-
-if [ "$first_time" = "yes" ]; then
-	echo -e "build control server container \n"
-	cd $DOCKER_COMPOSE_DIR && docker compose -f $DOCKER_COMPOSE_FILE build
-fi
 
 # find ethernet interface on device
 echo -e "\n set static ip \n"
@@ -49,6 +57,3 @@ nmcli connection up "laptop_static"
 
 echo "Static IP configuration complete for interface $interface_name."
 
-# run docker container
-echo -e "run client application \n"
-docker compose -f $DOCKER_COMPOSE_FILE up -d

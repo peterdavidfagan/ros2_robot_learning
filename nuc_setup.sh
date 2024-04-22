@@ -16,7 +16,7 @@ if [ "$first_time" = "yes" ]; then
         eval "$(ssh-agent -s)"
         ssh-add /home/$USERNAME/.ssh/id_ed25519
         ROOT_DIR="$(git rev-parse --show-toplevel)"
-        cd $ROOT_DIR && git submodule update --recursive --remote --init
+        cd $ROOT_DIR && git submodule update --recursive --init
 
         # install docker
         echo -e "\nInstall docker \n"
@@ -54,16 +54,6 @@ else
     echo -e "\nWelcome back!\n"
 fi
 
-read -p "Do you want to rebuild the container image? (yes/no): " first_time
-
-if [ "$first_time" = "yes" ]; then
-        echo -e "\n build control server container \n"
-
-        DOCKER_COMPOSE_DIR="$ROOT_DIR/.docker/control"
-        DOCKER_COMPOSE_FILE="$DOCKER_COMPOSE_DIR/docker-compose-control.yaml"
-        cd $DOCKER_COMPOSE_DIR && docker-compose -f $DOCKER_COMPOSE_FILE build
-fi
-
 # find ethernet interface on device
 echo -e "\n set static ip \n"
 
@@ -96,8 +86,4 @@ systemctl enable ssh
 
 # turn off display manager
 systemctl disable display-manager.service
-
-# run control server container (Note: this will automatically start on boot)
-DOCKER_COMPOSE_FILE="$(git rev-parse --show-toplevel)/.docker/control/docker-compose-control-server.yaml"
-docker compose -f $DOCKER_COMPOSE_FILE up -d
 
