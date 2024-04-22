@@ -35,7 +35,7 @@ services:
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
     volumes:
-      - ./zed_config/zed2i.yaml:/root/zed_ws/src/cameras/zed-ros2-wrapper/zed_wrapper/config/zed2i.yaml
+      - ./config/zed2i.yaml:/root/zed_ws/src/cameras/zed-ros2-wrapper/zed_wrapper/config/zed2i.yaml
     devices:
       - "/dev:/dev"
     networks:
