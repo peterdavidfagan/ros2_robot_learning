@@ -61,5 +61,5 @@ services:
       - ./results:/root/calibration_ws/src/moveit2_camera_calibration/results
     network_mode: "host"
     runtime: nvidia
-    command: python3 ./src/moveit2_camera_calibration/moveit2_camera_calibration/camera_calibration_app.py 
+    command: python3 ./src/cameras/moveit2_camera_calibration/moveit2_camera_calibration/camera_calibration_app.py 
 
