@@ -1,5 +1,5 @@
-camera_image_topic: /zed2i/zed_node/rgb_raw/image_raw_color
-camera_info_topic: /zed2i/zed_node/rgb_raw/camera_info
+camera_image_topic: /zed/zed_camera/rgb_raw/image_raw_color
+camera_info_topic: /zed/zed_camera/rgb_raw/camera_info
 
 charuco:
   squares_x: 14
@@ -10,16 +10,16 @@ charuco:
 workspace:
   x_min: -0.05
   x_max: 0.05
-  y_min: -0.05
-  y_max: 0.05
-  z_min: -0.05
-  z_max: 0.05
-  rot_x_min: -5.0
-  rot_x_max: 5.0
-  rot_y_min: -5.0
-  rot_y_max: 5.0
-  rot_z_min: -5.0
-  rot_z_max: 5.0
+  y_min: -0.1
+  y_max: 0.1
+  z_min: -0.1
+  z_max: 0.1
+  rot_x_min: -10.0
+  rot_x_max: 10.0
+  rot_y_min: -10.0
+  rot_y_max: 10.0
+  rot_z_min: -10.0
+  rot_z_max: 10.0
 
 eye_to_hand_calibration:
   num_samples: 25 # for debug purposes

@@ -58,7 +58,9 @@ services:
     volumes:
       - /tmp/.X11-unix:/tml/.X11-unix:rw
       - ${DOCKER_XAUTH}:${DOCKER_XAUTH}
-      - ./results:/root/calibration_ws/src/moveit2_camera_calibration/results
+      - ./results:/root/calibration_ws/src/applications/camera_calibration/results
+      - ./config:/root/calibration_ws/src/applications/camera_calibration/config
+      - ../../cameras:/root/calibration_ws/src/cameras
     network_mode: "host"
     runtime: nvidia
     command: python3 ./src/cameras/moveit2_camera_calibration/moveit2_camera_calibration/camera_calibration_app.py 
