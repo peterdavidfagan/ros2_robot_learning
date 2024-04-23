@@ -36,7 +36,7 @@ services:
     image: ghcr.io/peterdavidfagan/moveit2_data_collection:humble
     build: 
       context: ../../../../
-      dockerfile: .docker/camera_calibration_app/Dockerfile
+      dockerfile: .docker/transporter_data_collection_app/Dockerfile
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
       - DISPLAY=${DISPLAY}
@@ -44,6 +44,7 @@ services:
     volumes:
       - /tmp/.X11-unix:/tml/.X11-unix:rw
       - ${DOCKER_XAUTH}:${DOCKER_XAUTH}
+      - ./data:/root/data_collection_ws/data_collection/moveit2_data_collection/moveit2_data_collection/data
     network_mode: "host"
     runtime: nvidia
     command: python3 ./src/data_collection/moveit2_data_collection/moveit2_data_collection/transporter_data_collection_app.py 
