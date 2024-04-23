@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Define the IP addresses of yur machines
-CLIENT_IP="192.168.1.20"
-NUC_IP="192.168.1.10"
+CLIENT_IP="192.168.106.20"
+NUC_IP="192.168.106.10"
 
 # Initialize Docker Swarm on the manager node
 docker swarm init --advertise-addr $CLIENT_IP
