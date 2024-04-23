@@ -17,11 +17,10 @@ ENV ROS_UNDERLAY /root/calibration_ws/install
 WORKDIR $ROS_UNDERLAY/..
 COPY src/cameras/moveit2_camera_calibration ./src/cameras/moveit2_camera_calibration
 COPY src/motion_planning ./src/motion_planning
-
+COPY src/control/franka_ros2 ./src/control/franka_ros2
 
 RUN cd ./src/motion_planning && \
 	for repo in moveit2/moveit2.repos $(f="moveit2/moveit2_rolling.repos"; test -r $f && echo $f); do vcs import < "$repo"; done
-
 
 # set up workspace           
 RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
