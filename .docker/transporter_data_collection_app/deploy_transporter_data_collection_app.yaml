@@ -2,11 +2,11 @@ version: "3"
 
 services: 
   calibration_app:
-    image: ghcr.io/peterdavidfagan/moveit2_camera_calibration:humble
-    container_name: moveit2_camera_calibration
+    image: ghcr.io/peterdavidfagan/moveit2_data_collection:humble
+    container_name: moveit2_data_collection
     build: 
       context: ../../
-      dockerfile: .docker/camera_calibration_app/Dockerfile
+      dockerfile: .docker/transporter_data_collection_app/Dockerfile
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
     devices:
@@ -14,4 +14,4 @@ services:
     privileged: true
     runtime: nvidia
     network_mode: "host"
-    command: python3 ./src/moveit2_data_collection/moveit2_data_collection/transporter_data_collection_app.py 
+    command: python3 ./src/data_collection/moveit2_data_collection/moveit2_data_collection/transporter_data_collection_app.py 

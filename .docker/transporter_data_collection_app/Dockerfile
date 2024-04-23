@@ -13,10 +13,13 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # set up ROS workspace
-ENV ROS_UNDERLAY /root/calibration_ws/install
+ENV ROS_UNDERLAY /root/data_collection_ws/install
 WORKDIR $ROS_UNDERLAY/..
 COPY src/data_collection ./src/data_collection
 COPY src/motion_planning ./src/motion_planning
+COPY src/applications ./src/applications
+COPY src/control/franka_ros2/franka_description ./src/control/franka_ros2/franka_description
+COPY src/control/ros2_robotiq_gripper/robotiq_description ./src/control/ros2_robotiq_gripper/robotiq_description
 
 RUN cd ./src/motion_planning && \
 	for repo in moveit2/moveit2.repos $(f="moveit2/moveit2_rolling.repos"; test -r $f && echo $f); do vcs import < "$repo"; done
