@@ -1,12 +1,18 @@
-{
-  "intrinsic_params": {
-    "fx": 260.8450622558594,
-    "fy": 260.8450622558594,
-    "cx": 324.6383056640625,
-    "cy": 178.55564880371094
-  },
-  "extrinsic_params": {
-    "translation": [1.04, 0.0, 0.84],
-    "quaternion": [0.68421587, 0.63428563, -0.22690795, -0.27936206]
-  }
-}
+camera:
+  image_topic: /zed/zed_camera/rgb_raw/image_raw_color
+  depth_topic: /zed/zed_camera/depth_registered/depth
+
+  intrinsics:
+    fx: 260.8450622558594
+    fy: 260.8450622558594
+    cx: 324.6383056640625
+    cy: 178.55564880371094    
+
+  extrinsics:
+    x: 1.04
+    y: 0.0
+    z: 0.84
+    qw: 0.68421587   
+    qx: 0.63428563
+    qy: -0.22690795
+    qz: -0.27936206
