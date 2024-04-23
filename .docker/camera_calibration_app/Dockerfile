@@ -9,7 +9,7 @@ ENV RMW_IMPLEMENTATION rmw_cyclonedds_cpp
 # install system dependencies
 RUN apt-get update && \
     apt-get install -y neovim libxcb-cursor0 libgmp-dev python3-pip && \
-    pip install pyqt6 dm_env envlogger[tfds] scipy opencv-python cvbridge3 && \
+    pip install pyqt6 dm_env envlogger[tfds] scipy opencv-python==4.6.0.66 opencv-contrib-python==4.6.0.66 cvbridge3 && \
     rm -rf /var/lib/apt/lists/*
 
 # set up ROS workspace
