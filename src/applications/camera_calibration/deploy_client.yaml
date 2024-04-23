@@ -32,6 +32,20 @@ services:
     network_mode: "host"
     command: ros2 launch panda_motion_planning_demos motion_planning_prerequisites.launch.py
   
+  motion_planning_notebook:
+    image: ghcr.io/peterdavidfagan/panda_motion_planning:humble
+    build: 
+      context: ../../../../
+      dockerfile: .docker/motion_planning/Dockerfile.motion_planning
+    environment:
+      - DISPLAY=${DISPLAY}
+      - XAUTHORITY=${DOCKER_XAUTH}
+    volumes:
+      - /tmp/.X11-unix:/tml/.X11-unix:rw
+      - ${DOCKER_XAUTH}:${DOCKER_XAUTH}
+    network_mode: "host"
+    command: python3 -m notebook --allow-root
+  
   camera_calibration_app:
     image: ghcr.io/peterdavidfagan/moveit2_camera_calibration:humble
     build: 
