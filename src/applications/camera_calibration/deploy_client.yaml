@@ -1,31 +1,6 @@
 version: "3"
 
 services: 
-  control_server:
-   image: ghcr.io/peterdavidfagan/panda_control:humble
-   container_name: control_server
-    networks:
-      - ros_application
-    build: 
-      context: ../../../../
-      dockerfile: .docker/control/Dockerfile.control
-    devices:
-      - "/dev:/dev"
-    networks:
-      - ros_application
-    privileged: true
-    cap_add:
-      - SYS_NICE
-    ulimits:
-      rtprio: 70
-      rttime: -1 # corresponds to 'unlimited'
-      memlock: 8428281856
-    command: ros2 launch panda_control_demos franka_robotiq.launch.py use_fake_hardware:=false
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == NUC
-
   zed_camera:
     image: ghcr.io/peterdavidfagan/zed2:humble
     container_name: zed_camera
@@ -38,15 +13,10 @@ services:
       - ./config/zed2i.yaml:/root/zed_ws/src/cameras/zed-ros2-wrapper/zed_wrapper/config/zed2i.yaml
     devices:
       - "/dev:/dev"
-    networks:
-      - ros_application
+    network_mode: "host"
     privileged: true
     runtime: nvidia
     command: ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed2i node_name:=zed_camera
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == CLIENT
 
   motion_planning_prerequisites:
     image: ghcr.io/peterdavidfagan/panda_motion_planning:humble
@@ -59,13 +29,8 @@ services:
     volumes:
       - /tmp/.X11-unix:/tml/.X11-unix:rw
       - ${DOCKER_XAUTH}:${DOCKER_XAUTH}
-    networks:
-      - ros_application
+    network_mode: "host"
     command: ros2 launch panda_motion_planning_demos motion_planning_prerequisites.launch.py
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == CLIENT
   
   camera_calibration_app:
     image: ghcr.io/peterdavidfagan/moveit2_camera_calibration:humble
@@ -80,16 +45,7 @@ services:
       - /tmp/.X11-unix:/tml/.X11-unix:rw
       - ${DOCKER_XAUTH}:${DOCKER_XAUTH}
       - ./results:/root/calibration_ws/src/moveit2_camera_calibration/results
-    networks:
-      - ros_application
+    network_mode: "host"
     runtime: nvidia
     command: python3 ./src/moveit2_camera_calibration/moveit2_camera_calibration/camera_calibration_app.py 
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == CLIENT
 
-networks:
-   ros_application:
-     name: "host"
-     external: true 
