@@ -1,0 +1,67 @@
+version: "3"
+
+services: 
+  zed_camera:
+    image: ghcr.io/peterdavidfagan/zed2:humble
+    container_name: zed_camera
+    build: 
+      context: ../../../../
+      dockerfile: .docker/cameras/Dockerfile.zed
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    volumes:
+      - ./config/zed2i.yaml:/root/zed_ws/src/cameras/zed-ros2-wrapper/zed_wrapper/config/zed2i.yaml
+    devices:
+      - "/dev:/dev"
+    network_mode: "host"
+    privileged: true
+    runtime: nvidia
+    command: ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed2i node_name:=zed_camera
+
+  motion_planning_prerequisites:
+    image: ghcr.io/peterdavidfagan/panda_motion_planning:humble
+    build: 
+      context: ../../../../
+      dockerfile: .docker/motion_planning/Dockerfile.motion_planning
+    environment:
+      - DISPLAY=${DISPLAY}
+      - XAUTHORITY=${DOCKER_XAUTH}
+    volumes:
+      - /tmp/.X11-unix:/tml/.X11-unix:rw
+      - ${DOCKER_XAUTH}:${DOCKER_XAUTH}
+    network_mode: "host"
+    command: ros2 launch panda_motion_planning_demos motion_planning_prerequisites.launch.py
+  
+  motion_planning_notebook:
+    image: ghcr.io/peterdavidfagan/panda_motion_planning:humble
+    build: 
+      context: ../../../../
+      dockerfile: .docker/motion_planning/Dockerfile.motion_planning
+    environment:
+      - DISPLAY=${DISPLAY}
+      - XAUTHORITY=${DOCKER_XAUTH}
+    volumes:
+      - /tmp/.X11-unix:/tml/.X11-unix:rw
+      - ${DOCKER_XAUTH}:${DOCKER_XAUTH}
+    network_mode: "host"
+    command: python3 -m notebook --allow-root
+  
+  camera_calibration_app:
+    image: ghcr.io/peterdavidfagan/moveit2_camera_calibration:humble
+    build: 
+      context: ../../../../
+      dockerfile: .docker/camera_calibration_app/Dockerfile
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - DISPLAY=${DISPLAY}
+      - XAUTHORITY=${DOCKER_XAUTH}
+    volumes:
+      - /tmp/.X11-unix:/tml/.X11-unix:rw
+      - ${DOCKER_XAUTH}:${DOCKER_XAUTH}
+      - ./results:/root/calibration_ws/src/applications/camera_calibration/results
+      - ./config:/root/calibration_ws/src/applications/camera_calibration/config
+      - ../../cameras:/root/calibration_ws/src/cameras
+    network_mode: "host"
+    runtime: nvidia
+    command: python3 ./src/cameras/moveit2_camera_calibration/moveit2_camera_calibration/camera_calibration_app.py 
+
