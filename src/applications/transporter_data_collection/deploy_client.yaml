@@ -3,14 +3,13 @@ version: "3"
 services: 
   zed_camera:
     image: ghcr.io/peterdavidfagan/zed2:humble
-    container_name: zed_camera
     build: 
       context: ../../../../
       dockerfile: .docker/cameras/Dockerfile.zed
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
     volumes:
-      - ./config/zed2i.yaml:/root/zed_ws/src/cameras/zed-ros2-wrapper/zed_wrapper/config/zed2i.yaml
+      - ./config/zed2i.yaml:/root/zed_ws/src/cameras/zed_wrapper/config/zed2i.yaml
     devices:
       - "/dev:/dev"
     network_mode: "host"
@@ -28,7 +27,7 @@ services:
       - XAUTHORITY=${DOCKER_XAUTH}
     volumes:
       - /tmp/.X11-unix:/tml/.X11-unix:rw
-      - ${DOCKER_XAUTH}:${DOCKER_XAUTH}
+      #- ${DOCKER_XAUTH}:${DOCKER_XAUTH}
     network_mode: "host"
     command: ros2 launch panda_motion_planning_demos motion_planning_prerequisites.launch.py
   
@@ -40,12 +39,14 @@ services:
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
       - DISPLAY=${DISPLAY}
-      - XAUTHORITY=${DOCKER_XAUTH}
+      #- XAUTHORITY=${DOCKER_XAUTH}
     volumes:
       - /tmp/.X11-unix:/tml/.X11-unix:rw
-      - ${DOCKER_XAUTH}:${DOCKER_XAUTH}
+      #- ${DOCKER_XAUTH}:${DOCKER_XAUTH}
+      - ./config:/root/data_collection_ws/src/applications/transporter_data_collection/config
+      - ./../../data_collection:/root/data_collection_ws/src/data_collection
       - ./data:/root/data_collection_ws/data_collection/moveit2_data_collection/moveit2_data_collection/data
     network_mode: "host"
     runtime: nvidia
-    command: python3 ./src/data_collection/moveit2_data_collection/moveit2_data_collection/transporter_data_collection_app.py 
+    command: python3 src/data_collection/moveit2_data_collector/moveit2_data_collector/transporter_data_collection_app.py 
 
