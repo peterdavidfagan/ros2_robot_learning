@@ -10,7 +10,7 @@ services:
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
     volumes:
-      - ./config/zed2i.yaml:/root/zed_ws/src/cameras/zed-ros2-wrapper/zed_wrapper/config/zed2i.yaml
+      - ./config/zed2i.yaml:/root/zed_ws/src/cameras/zed_wrapper/config/zed2i.yaml
     devices:
       - "/dev:/dev"
     network_mode: "host"
@@ -28,7 +28,8 @@ services:
       - XAUTHORITY=${DOCKER_XAUTH}
     volumes:
       - /tmp/.X11-unix:/tml/.X11-unix:rw
-      - ${DOCKER_XAUTH}:${DOCKER_XAUTH}
+      - ~/.Xauthority:/root/.Xauthority
+      #- ${DOCKER_XAUTH}:${DOCKER_XAUTH}
     network_mode: "host"
     command: ros2 launch panda_motion_planning_demos motion_planning_prerequisites.launch.py
   
@@ -42,7 +43,8 @@ services:
       - XAUTHORITY=${DOCKER_XAUTH}
     volumes:
       - /tmp/.X11-unix:/tml/.X11-unix:rw
-      - ${DOCKER_XAUTH}:${DOCKER_XAUTH}
+      - ~/.Xauthority:/root/.Xauthority
+      #- ${DOCKER_XAUTH}:${DOCKER_XAUTH}
     network_mode: "host"
     command: python3 -m notebook --allow-root
   
@@ -57,10 +59,11 @@ services:
       - XAUTHORITY=${DOCKER_XAUTH}
     volumes:
       - /tmp/.X11-unix:/tml/.X11-unix:rw
-      - ${DOCKER_XAUTH}:${DOCKER_XAUTH}
-      - ./results:/root/calibration_ws/src/applications/camera_calibration/results
+      - ~/.Xauthority:/root/.Xauthority
+      #- ${DOCKER_XAUTH}:${DOCKER_XAUTH}
+      - ./results:/root/calibration_ws/results
       - ./config:/root/calibration_ws/src/applications/camera_calibration/config
-      - ../../cameras:/root/calibration_ws/src/cameras
+      - ./../../cameras:/root/calibration_ws/src/cameras
     network_mode: "host"
     runtime: nvidia
     command: python3 ./src/cameras/moveit2_camera_calibration/moveit2_camera_calibration/camera_calibration_app.py 

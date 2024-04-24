@@ -22,9 +22,9 @@ workspace:
   rot_z_max: 10.0
 
 eye_to_hand_calibration:
-  num_samples: 25 # for debug purposes
-  sample_delay: 0.4
+  num_samples: 50 # for debug purposes
+  sample_delay: 0.2
 
 eye_in_hand_calibration:
-  num_samples: 25 # for debug purposes
-  sample_delay: 0.4
+  num_samples: 50 # for debug purposes
+  sample_delay: 0.2
