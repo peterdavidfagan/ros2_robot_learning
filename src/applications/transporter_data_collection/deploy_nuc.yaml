@@ -4,8 +4,6 @@ services:
   control_server:
    image: ghcr.io/peterdavidfagan/panda_control:humble
    container_name: control_server
-   networks:
-     - ros_application
    build: 
      context: ../../../../
      dockerfile: .docker/control/Dockerfile.control
