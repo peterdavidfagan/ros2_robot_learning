@@ -2,7 +2,7 @@ version: "3"
 
 services: 
   control_server:
-    image: ghcr.io/peterdavidfagan/panda_control:humble
+    image: ghcr.io/peterdavidfagan/ur_control:humble
     container_name: franka_robotiq_control_server
     build: 
       context: ../../

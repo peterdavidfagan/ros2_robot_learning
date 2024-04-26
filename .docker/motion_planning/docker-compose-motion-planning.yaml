@@ -2,7 +2,7 @@ version: "3"
 
 services: 
   moveit:
-    image: ghcr.io/peterdavidfagan/panda_motion_planning:humble
+    image: ghcr.io/peterdavidfagan/ur_motion_planning:humble
     build: 
       context: ../../
       dockerfile: .docker/motion_planning/Dockerfile.motion_planning
