@@ -55,6 +55,24 @@ def generate_launch_description():
             .to_moveit_configs()
             )
 
+    rviz_config_file = os.path.join(
+        get_package_share_directory("panda_motion_planning_demos"),
+        "config",
+        "planning_scene.rviz",
+    )
+
+    rviz_node = Node(
+        package="rviz2",
+        executable="rviz2",
+        name="rviz2",
+        output="log",
+        arguments=["-d", rviz_config_file],
+        parameters=[
+            moveit_config.robot_description,
+            moveit_config.robot_description_semantic,
+        ],
+    )
+
     static_tf = Node(
         package="tf2_ros",
         executable="static_transform_publisher",
@@ -89,6 +107,7 @@ def generate_launch_description():
             robot_ip,
             use_gripper,
             use_fake_hardware,
+            rviz_node,
             static_tf,
             joint_state_publisher,
             robot_state_publisher,
