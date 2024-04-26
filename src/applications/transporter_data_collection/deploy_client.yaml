@@ -28,6 +28,7 @@ services:
     volumes:
       - /tmp/.X11-unix:/tml/.X11-unix:rw
       #- ${DOCKER_XAUTH}:${DOCKER_XAUTH}
+      - ../../applications:/root/panda_ws/src/applications
     network_mode: "host"
     command: ros2 launch panda_motion_planning_demos motion_planning_prerequisites.launch.py
   
@@ -45,7 +46,9 @@ services:
       #- ${DOCKER_XAUTH}:${DOCKER_XAUTH}
       - ./config:/root/data_collection_ws/src/applications/transporter_data_collection/config
       - ./../../data_collection:/root/data_collection_ws/src/data_collection
-      - ./data:/root/data_collection_ws/data_collection/moveit2_data_collection/moveit2_data_collection/data
+      - ./../../motion_planning:/root/data_collection_ws/src/motion_planning
+      - ./../../applications:/root/data_collection_ws/src/applications
+      - ./data:/root/data_collection_ws/src/data_collection/moveit2_data_collector/moveit2_data_collector/data
     network_mode: "host"
     runtime: nvidia
     command: python3 src/data_collection/moveit2_data_collector/moveit2_data_collector/transporter_data_collection_app.py 
