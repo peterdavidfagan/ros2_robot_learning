@@ -65,3 +65,6 @@
 [submodule "libfranka"]
 	path = libfranka
 	url = git@github.com:tingelst/libfranka.git
+[submodule "src/control/franka_controllers"]
+	path = src/control/franka_controllers
+	url = git@github.com:peterdavidfagan/franka_controllers.git
