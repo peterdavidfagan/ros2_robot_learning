@@ -1,0 +1,16 @@
+{
+  "fileFormat": "tfrecord",
+  "name": "transport_cubes",
+  "splits": [
+    {
+      "filepathTemplate": "{DATASET}-{SPLIT}.{FILEFORMAT}-{SHARD_INDEX}",
+      "name": "train",
+      "numBytes": "75030455",
+      "shardLengths": [
+        "1",
+        "1"
+      ]
+    }
+  ],
+  "version": "0.0.1"
+}

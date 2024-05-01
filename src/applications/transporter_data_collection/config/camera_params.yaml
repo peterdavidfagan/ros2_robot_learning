@@ -1,3 +1,6 @@
+workspace:
+  table_height_offset: 0.0
+
 camera:
   image_topic: /zed/zed_camera/rgb/image_rect_color
   depth_topic: /zed/zed_camera/depth/depth_registered

@@ -3,4 +3,9 @@ import tensorflow_datasets as tfds
 
 ds = tfds.load('transporter')['train']
 for e in ds:
-    print(e)
+    try:
+        print(e)
+        print("eps")
+    except:
+        continue
+print("test")

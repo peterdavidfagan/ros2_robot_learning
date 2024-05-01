@@ -24,7 +24,7 @@ class Transporter(tfds.core.GeneratorBasedBuilder):
   }
 
   _DATA_PATHS = {
-      'example': 'https://storage.googleapis.com/rlds_external_data_release/rlds_robosuite_panda_pick_place_can_human_state_only_dc29b40a.tar.gz',
+      'example': 'placeholder',
        }
 
   # pytype: disable=wrong-keyword-args
