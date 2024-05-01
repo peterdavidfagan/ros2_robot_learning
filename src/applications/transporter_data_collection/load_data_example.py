@@ -1,7 +1,7 @@
 import os
 import tarfile
 
-import tensorflowdatasets as tfds
+import tensorflow_datasets as tfds
 from huggingface_hub import hf_hub_download
 
 DATA_DIR="/home/robot"
@@ -34,4 +34,4 @@ for eps in ds:
         print(step["is_first"])
         print(step["is_last"])
         print(step["is_terminal"])
-        print(step["action"])_
+        print(step["action"])
