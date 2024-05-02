@@ -7,10 +7,29 @@ ENV ROS_DISTRO=humble
 ENV RMW_IMPLEMENTATION rmw_cyclonedds_cpp
 
 # install system dependencies
-RUN apt-get update && \
-    apt-get install -y neovim libxcb-cursor0 libgmp-dev python3-pip && \
-    pip install pyqt6 dm_env envlogger[tfds] scipy opencv-python==4.6.0.66 opencv-contrib-python==4.6.0.66 cvbridge3 && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
+        make \
+        build-essential \
+        libssl-dev \
+        zlib1g-dev \
+        libbz2-dev \
+        libreadline-dev \
+        libsqlite3-dev \
+        wget \
+        curl \
+        llvm \
+        libncurses5-dev \
+        libncursesw5-dev \
+        xz-utils \
+        tk-dev \
+        libffi-dev \
+        liblzma-dev \
+        git \
+        neovim \
+        libxcb-cursor0 \ 
+        libgmp-dev && \
+        rm -rf /var/lib/apt/lists/*
 
 # set up ROS workspace
 ENV ROS_UNDERLAY /root/calibration_ws/install
@@ -20,13 +39,23 @@ COPY src/motion_planning ./src/motion_planning
 COPY src/applications ./src/applications
 COPY src/control/franka_ros2/franka_description ./src/control/franka_ros2/franka_description
 COPY src/control/ros2_robotiq_gripper/robotiq_description ./src/control/ros2_robotiq_gripper/robotiq_description
+COPY pyproject.toml .
+
+# install python virtual environment
+RUN git clone https://github.com/pyenv/pyenv.git /pyenv
+ENV PYENV_ROOT /pyenv
+RUN /pyenv/bin/pyenv install 3.10.6
+RUN eval "$(/pyenv/bin/pyenv init -)" && /pyenv/bin/pyenv local 3.10.6 && pip install numpy poetry setuptools wheel six auditwheel
+RUN mkdir -p .venv
+RUN eval "$(/pyenv/bin/pyenv init -)" && /pyenv/bin/pyenv local 3.10.6 && poetry config virtualenvs.in-project true --local && poetry install
 
 
 RUN cd ./src/motion_planning && \
 	for repo in moveit2/moveit2.repos $(f="moveit2/moveit2_rolling.repos"; test -r $f && echo $f); do vcs import < "$repo"; done
 
 # set up workspace           
-RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
+RUN . .venv/bin/activate && \
+    . /opt/ros/${ROS_DISTRO}/setup.sh && \
     apt-get update && \
     apt-get install -y ros-${ROS_DISTRO}-rmw-cyclonedds-cpp && \
     rosdep update && \
