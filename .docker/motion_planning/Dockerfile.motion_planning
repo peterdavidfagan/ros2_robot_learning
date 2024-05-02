@@ -50,7 +50,7 @@ RUN mkdir -p .venv
 RUN eval "$(/pyenv/bin/pyenv init -)" && /pyenv/bin/pyenv local 3.10.6 && poetry config virtualenvs.in-project true --local && poetry install
 
 # set up workspace           
-RUN ./ros_workspace_setup.sh && \
+RUN ./ros_workspace_setup.sh --build_poetry false && \
     rm -rf /var/lib/apt/lists/*
 
 # create entrypoint
