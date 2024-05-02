@@ -1,4 +1,44 @@
 #!/bin/bash
+
+# parse input args
+# Initialize variables with default values
+poetry_build=true
+
+# Function to display usage information
+usage() {
+    echo "Usage: $0 [--poetry_build <true/false>]"
+    echo "Options:"
+    echo "  --poetry_build         Specify whether to build poetry env or not (optional, default: false)"
+    exit 1
+}
+
+# Parse command line options
+while [[ $# -gt 0 ]]; do
+    key="$1"
+    case $key in
+        --poetry_build)
+        case $2 in
+            true)
+            poetry_build=true
+            ;;
+            false)
+            poetry_build=false
+            ;;
+            *)
+            echo "Invalid value for --poetry_build. Please use 'true' or 'false'."
+            usage
+            ;;
+        esac
+        shift # past argument
+        shift # past value
+        ;;
+        *)    # unknown option
+        echo "Unknown option: $key"
+        usage
+        ;;
+    esac
+done
+
 set -e
 
 # enter root directory
@@ -21,9 +61,13 @@ sudo dpkg -i libfranka*.deb
 cd ../..
 
 # install and activate python environment
-rm poetry.lock
-poetry install
-poetry shell
+if $poetry_build; then
+	[ -e poetry.lock ] && rm poetry.lock
+	poetry install
+	poetry shell
+else
+	source .venv/bin/activate
+fi
 
 # source humble installation and install middleware
 source /opt/ros/humble/setup.bash

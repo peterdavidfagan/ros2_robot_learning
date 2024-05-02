@@ -6,10 +6,30 @@ MAINTAINER Peter David Fagan "peterdavidfagan@gmail.com"
 ENV ROS_DISTRO=humble
 ENV RMW_IMPLEMENTATION rmw_cyclonedds_cpp
 
-# install neovim IDE for debug
-RUN apt-get update && \
-    apt-get install -y neovim && \
-    rm -rf /var/lib/apt/lists/*
+# install system dependencies
+RUN apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
+        make \
+        build-essential \
+        libssl-dev \
+        zlib1g-dev \
+        libbz2-dev \
+        libreadline-dev \
+        libsqlite3-dev \
+        wget \
+        curl \
+        llvm \
+        libncurses5-dev \
+        libncursesw5-dev \
+        xz-utils \
+        tk-dev \
+        libffi-dev \
+        liblzma-dev \
+        git \
+        neovim \
+        libxcb-cursor0 \ 
+        libgmp-dev && \
+        rm -rf /var/lib/apt/lists/*
 
 # set up ROS workspace
 ENV ROS_UNDERLAY /root/panda_ws/install
@@ -18,7 +38,16 @@ COPY src/control ./src/control
 COPY src/motion_planning ./src/motion_planning
 COPY src/applications ./src/applications
 COPY libfranka ./libfranka 
-COPY ros_workspace_setup.sh ./ros_workspace_setup.sh
+COPY scripts/ros_workspace_setup.sh ./ros_workspace_setup.sh
+COPY pyproject.toml .
+
+# install python virtual environment
+RUN git clone https://github.com/pyenv/pyenv.git /pyenv
+ENV PYENV_ROOT /pyenv
+RUN /pyenv/bin/pyenv install 3.10.6
+RUN eval "$(/pyenv/bin/pyenv init -)" && /pyenv/bin/pyenv local 3.10.6 && pip install numpy poetry setuptools wheel six auditwheel
+RUN mkdir -p .venv
+RUN eval "$(/pyenv/bin/pyenv init -)" && /pyenv/bin/pyenv local 3.10.6 && poetry config virtualenvs.in-project true --local && poetry install
 
 # set up workspace           
 RUN ./ros_workspace_setup.sh && \
