@@ -1,0 +1,41 @@
+[project]
+name = "ros2_robotics_research_toolkit"
+version = "0.0.0"
+description = "A ROS 2 workspace to support robot learning research within the ROS 2 ecosystem."
+authors = [
+	{ name = "Peter David Fagan", email = "peterdavidfagan@gmail.com" }
+]
+readme = "README.md"
+
+[tool.poetry]
+package-mode=false
+name = "ros2_robotics_research_toolkit"
+version = "0.0.0"
+description = "A ROS 2 workspace to support robot learning research within the ROS 2 ecosystem."
+license = "Apache-2.0"
+authors = [
+	"Peter David Fagan <peterdavidfagan@gmail.com>"
+]
+readme = "README.md"
+classifiers = [
+    "Operating System :: POSIX :: Linux"
+]
+
+[tool.poetry.dependencies]
+python = "3.10.6"
+numpy = "^1.16.0"
+tensorflow-cpu = {version="2.15.0", markers = "sys_platform == 'linux'"}
+envlogger = {version="^1.1", extras=["tfds"], markers = "sys_platform == 'linux'"}
+tensorflow-datasets = "4.9.3"
+rlds = {version="^0.1.7", markers = "sys_platform == 'linux'"}
+huggingface-hub = "^0.22.0"
+catkin-pkg = "^1.0.0"
+empy = "3.3.4"
+lark = "^1.1.9"
+dspy-ai = "^2.4.9"
+
+[tool.black]
+line-length = 120
+
+[tool.flake8]
+max-line-length = 120
