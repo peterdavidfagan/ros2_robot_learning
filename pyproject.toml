@@ -24,6 +24,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "3.10.6"
 numpy = "^1.16.0"
+scipy = "^1.13.0"
 tensorflow-cpu = {version="2.15.0", markers = "sys_platform == 'linux'"}
 envlogger = {version="^1.1", extras=["tfds"], markers = "sys_platform == 'linux'"}
 tensorflow-datasets = "4.9.3"
@@ -33,6 +34,11 @@ catkin-pkg = "^1.0.0"
 empy = "3.3.4"
 lark = "^1.1.9"
 dspy-ai = "^2.4.9"
+pyqt6 = "^6.7.0"
+dm_env = "1.6"
+opencv-python = "4.6.0.66" 
+opencv-contrib-python = "4.6.0.66" 
+cvbridge3 = "^1.1"
 
 [tool.black]
 line-length = 120
