@@ -65,3 +65,6 @@
 [submodule "libfranka"]
 	path = libfranka
 	url = git@github.com:tingelst/libfranka.git
+[submodule "src/motion_planning/moveit2_policy_msgs"]
+	path = src/motion_planning/moveit2_policy_msgs
+	url = git@github.com:peterdavidfagan/moveit2_policy_msgs.git
