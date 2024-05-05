@@ -20,6 +20,9 @@ from std_srvs.srv import SetBool
 import onnx
 import onnxruntime as ort
 from huggingface_hub import hf_hub_download
+import einops as e
+import jax
+import jax.numpy as jnp
 
 from panda_policy_deployment_demos.panda_policy_deployment_demos_parameters import policy as params
 
