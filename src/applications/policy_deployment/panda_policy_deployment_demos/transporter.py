@@ -15,6 +15,7 @@ from moveit2_data_collector.robot_workspaces.franka_table import FrankaTable
 from geometry_msgs.msg import PoseStamped
 from moveit_msgs.srv import ServoCommandType
 from moveit2_policy_msgs.action import Transporter
+from sensor_msgs.msg import Image
 from std_srvs.srv import SetBool
 
 import onnx
@@ -33,6 +34,10 @@ class TransporterActionServer(Node):
     def __init__(self):
         super().__init__(params)
         self._logger.info("Initializing transporter policy.")
+
+        # publishers for transporter predictions
+        self.pick_prediction_publisher = self.create_publisher(Image, 'pick_qvals', 10)
+        self.place_prediction_publisher = self.create_publisher(Image, 'place_qvals', 10)
         
         # use CvBridge to convert sensor_msgs/Image to numpy array
         self.cv_bridge = CvBridge()
@@ -99,8 +104,8 @@ class TransporterActionServer(Node):
 
         # crop images about workspace
         # TODO: read crop indices from config
-        rgb_crop_raw = jax.lax.slice(rgb, (crop_idx[0], crop_idx[1], 0), (crop_idx[2], crop_idx[3],3))
-        depth_crop_raw = jax.lax.slice(depth, (crop_idx[0], crop_idx[1]), (crop_idx[2], crop_idx[3]))
+        rgb_crop_raw = jax.lax.slice(rgb, (220, 395, 0), (580, 755,3))
+        depth_crop_raw = jax.lax.slice(depth, (220, 395), (580, 755))
 
         # process depth
         nan_mask = jnp.isnan(depth_crop_raw)
@@ -118,6 +123,11 @@ class TransporterActionServer(Node):
         # perform inference with transporter network
         results = self.model.run(["pick_qvals", "place_qvals"], {"rgbd": rgbd_crop})
 
+        # publish predictions
+        self.pick_prediction_publisher.publish(self.q_vals_2_img(results['pick_qvals']))
+        self.place_prediction_publisher.publish(self.q_vals_2_img(results['place_qvals']))
+        
+        # execute actions
         pick_action_dict = {
             "pose": self.pixel_2_world(results['pick_qvals'], depth_data),
             "pixel_coords": np.array([u, v]),
@@ -145,13 +155,14 @@ class TransporterActionServer(Node):
         """
         
         # convert pixel coordinates to coordinates in raw image
-
+        v = coords[0] + 395
+        u = coords[1] + 220
 
         # convert current pixels coordinates to camera frame coordinates
         pixel_coords = np.array([u, v])
         image_coords = np.concatenate([pixel_coords, np.ones(1)])
         camera_coords =  np.linalg.inv(self.camera_intrinsics) @ image_coords
-        camera_coords *= depth_data[] # negate depth when using mujoco camera convention
+        camera_coords *= depth_data[v, u] # negate depth when using mujoco camera convention
 
         # convert camera coordinates to world coordinates
         camera_coords = np.concatenate([camera_coords, np.ones(1)])
@@ -162,6 +173,10 @@ class TransporterActionServer(Node):
 
         return pose
        
+    def q_vals_2_img(self, q_vals):
+        normalized_heatmap = cv2.normalize(q_vals, None, 0, 255, cv2.NORM_MINMAX, dtype=cv2.CV_8U)
+        colormap = cv2.applyColorMap(normalized_heatmap, cv2.COLORMAP_JET)
+        return self.bridge.cv2_to_imgmsg(cv_image, encoding="bgr8")
 
 def main():
     rclpy.init()
