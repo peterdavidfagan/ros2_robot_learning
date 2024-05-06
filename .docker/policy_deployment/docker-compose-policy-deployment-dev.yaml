@@ -1,0 +1,20 @@
+version: "3"
+
+services: 
+  moveit:
+    image: ghcr.io/peterdavidfagan/panda_policy_deployment:humble
+    build: 
+      context: ../../
+      dockerfile: .docker/policy_deployment/Dockerfile.policy_deployment
+    environment:
+      - DISPLAY=${DISPLAY}
+      - XAUTHORITY=${DOCKER_XAUTH}
+    volumes:
+      - /tmp/.X11-unix:/tml/.X11-unix:rw
+      - ${DOCKER_XAUTH}:${DOCKER_XAUTH}
+      - ../../src:/root/panda_ws/src
+    devices:
+      - "/dev:/dev"
+    privileged: true
+    network_mode: "host"
+    command: echo test
