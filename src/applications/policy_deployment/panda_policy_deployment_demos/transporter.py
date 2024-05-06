@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Demonstrating policy deployment for a policy that accepts a single image as input."""
-
+import argparse
 import yaml
 from ament_index_python.packages import get_package_share_directory
 
@@ -35,6 +35,11 @@ class TransporterActionServer(Node):
         super().__init__(params)
         self._logger.info("Initializing transporter policy.")
 
+        # load deployment params
+        deployment_param_path = os.path.join(get_package_share_directory("panda_policy_deployment_demos"), "config", "transporter_deployment.yaml")
+        with open(deployment_param_path, 'r') as f:
+            self.config = yaml.load(f, Loader=yaml.SafeLoader)
+
         # publishers for transporter predictions
         self.pick_prediction_publisher = self.create_publisher(Image, 'pick_qvals', 10)
         self.place_prediction_publisher = self.create_publisher(Image, 'place_qvals', 10)
@@ -44,17 +49,17 @@ class TransporterActionServer(Node):
         
         # download model file from hugging face
         hf_hub_download(
-        repo_id="peterdavidfagan/transporter_networks",
-        repo_type="model",
-        filename="transporter.onnx",
-        local_dir="/tmp/models/transporter.onnx",
+            repo_id="peterdavidfagan/transporter_networks",
+            repo_type="model",
+            filename="transporter.onnx",
+            local_dir="/tmp/models/transporter.onnx",
         )
 
         # start onnx inference session
         self.model = ort.InferenceSession("/tmp/models/transporter.onnx")
 
         # initialize workspace environment
-        self.env = FrankaTable() # TODO: pass proper args here
+        self.env = FrankaTable()
 
         # instantiate action server
         self.action_server = ActionServer(
@@ -63,10 +68,6 @@ class TransporterActionServer(Node):
             'transporter',
             self.forward,
             )
-
-        # TODO: store camera configuration params
-        with open('placeholder.yml', 'r') as f:
-            self.config = yaml.load(f, Loader=yaml.SafeLoader)
         
         # assign camera intrinsics
         fx = self.config["camera"]["intrinsics"]["fx"]
@@ -92,6 +93,12 @@ class TransporterActionServer(Node):
         self.camera_extrinsics[:3, :3] = rotation
         self.camera_extrinsics[:3, 3] = translation
 
+        # workspace image crop
+        self.u_min = self.config["camera"]["crop"]["top_left_u"]
+        self.u_max = self.config["camera"]["crop"]["bottom_right_u"]
+        self.v_min = self.config["camera"]["crop"]["top_left_v"]
+        self.v_max = self.config["camera"]["crop"]["bottom_right_v"]
+
 
     def forward(self, goal_handle):
         """Predict action with transporter network and execute with MoveIt."""
@@ -103,9 +110,8 @@ class TransporterActionServer(Node):
         depth = self.cv_bridge.imgmsg_to_cv2(depth, "32FC1")
 
         # crop images about workspace
-        # TODO: read crop indices from config
-        rgb_crop_raw = jax.lax.slice(rgb, (220, 395, 0), (580, 755,3))
-        depth_crop_raw = jax.lax.slice(depth, (220, 395), (580, 755))
+        rgb_crop_raw = jax.lax.slice(rgb, (self.v_min, self.u_min, 0), (self.v_max, self.u_max, 3))
+        depth_crop_raw = jax.lax.slice(depth, (self.v_min, self.u_min), (self.v_max, self.u_max))
 
         # process depth
         nan_mask = jnp.isnan(depth_crop_raw)
@@ -131,13 +137,13 @@ class TransporterActionServer(Node):
         pick_action_dict = {
             "pose": self.pixel_2_world(results['pick_qvals'], depth_data),
             "pixel_coords": np.array([u, v]),
-            "gripper_rot": 180, # defined wrt base frame, note z-axis of gripper frame points in direction of grasp
+            "gripper_rot": 0, # defined wrt base frame, note z-axis of gripper frame points in direction of grasp
         }
 
         place_action_dict = {
             "pose": self.pixel_2_world(results['place_qvals'], depth_data), 
             "pixel_coords": np.array([u, v]),
-            "gripper_rot": 180, # defined wrt base frame, note z-axis of gripper frame points in direction of grasp
+            "gripper_rot": 0, # defined wrt base frame, note z-axis of gripper frame points in direction of grasp
         }
 
         # execute action using MoveIt in robot workspace
@@ -155,8 +161,8 @@ class TransporterActionServer(Node):
         """
         
         # convert pixel coordinates to coordinates in raw image
-        v = coords[0] + 395
-        u = coords[1] + 220
+        v = coords[0] + self.v_min
+        u = coords[1] + self.u_min
 
         # convert current pixels coordinates to camera frame coordinates
         pixel_coords = np.array([u, v])
@@ -168,7 +174,7 @@ class TransporterActionServer(Node):
         camera_coords = np.concatenate([camera_coords, np.ones(1)])
         world_coords = self.camera_extrinsics @ camera_coords
         world_coords = world_coords[:3] / world_coords[3]
-        quat = R.from_euler('xyz', [0, 180, 180], degrees=True).as_quat() # TODO: update when also predicting gripper rotation
+        quat = R.from_euler('xyz', [0, 180, 0], degrees=True).as_quat() # TODO: update when also predicting gripper rotation
         pose = np.concatenate([world_coords, quat])
 
         return pose
@@ -176,7 +182,7 @@ class TransporterActionServer(Node):
     def q_vals_2_img(self, q_vals):
         normalized_heatmap = cv2.normalize(q_vals, None, 0, 255, cv2.NORM_MINMAX, dtype=cv2.CV_8U)
         colormap = cv2.applyColorMap(normalized_heatmap, cv2.COLORMAP_JET)
-        return self.bridge.cv2_to_imgmsg(cv_image, encoding="bgr8")
+        return self.cv_bridge.cv2_to_imgmsg(cv_image, encoding="bgr8")
 
 def main():
     rclpy.init()

@@ -1,0 +1,27 @@
+workspace:
+  table_height_offset: 0.0
+
+camera:
+  image_topic: /zed/zed_camera/rgb/image_rect_color
+  depth_topic: /zed/zed_camera/depth/depth_registered
+
+  intrinsics:
+    fx: 523.4645385742188
+    fy: 523.4645385742188
+    cx: 561.8798828125
+    cy: 309.3200378417969   
+
+  extrinsics:
+    x: 1.04322964
+    y: -0.11564952
+    z: 0.84412144
+    qx: 0.67835388
+    qy: 0.63676566
+    qz: -0.22833043
+    qw: -0.28675899  
+
+  crop:
+    top_left_u: 395
+    top_left_v: 220
+    bottom_right_u: 755
+    bottom_right_v: 580
