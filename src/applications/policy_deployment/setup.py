@@ -11,7 +11,7 @@ setup(
              ['resource/' + package_name]),
      ('share/' + package_name, ['package.xml']),
      ('share/' + package_name + '/launch', ['launch/policy.launch.py', 'launch/language_conditioned_policy.launch.py']),
-     ('share/' + package_name + '/config', ['config/policy.yaml']),
+     ('share/' + package_name + '/config', ['config/policy.yaml', 'config/transporter_deployment.yaml']),
    ],
  install_requires=['setuptools'],
  zip_safe=True,
