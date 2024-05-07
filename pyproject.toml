@@ -39,6 +39,11 @@ dm_env = "1.6"
 opencv-python = "4.6.0.66" 
 opencv-contrib-python = "4.6.0.66" 
 cvbridge3 = "^1.1"
+onnx = "^1.16.0"
+onnxruntime = "^1.17.3"
+einops = "^0.8.0"
+jaxlib = "^0.4.26"
+jax = "^0.4.26"
 
 [tool.black]
 line-length = 120
