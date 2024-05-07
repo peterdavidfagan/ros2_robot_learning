@@ -34,9 +34,10 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
 # set up ROS workspace
 ENV ROS_UNDERLAY /root/panda_ws/install
 WORKDIR $ROS_UNDERLAY/..
-COPY src/control ./src/control
-COPY src/motion_planning ./src/motion_planning
 COPY src/applications ./src/applications
+COPY src/control ./src/control
+COPY src/data_collection ./src/data_collection
+COPY src/motion_planning ./src/motion_planning
 COPY libfranka ./libfranka 
 COPY scripts/ros_workspace_setup.sh ./scripts/ros_workspace_setup.sh
 COPY pyproject.toml .
