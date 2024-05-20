@@ -65,3 +65,6 @@
 [submodule "src/motion_planning/moveit2_policy_msgs"]
 	path = src/motion_planning/moveit2_policy_msgs
 	url = git@github.com:peterdavidfagan/moveit2_policy_msgs.git
+[submodule "src/control/ros2_robotiq_gripper"]
+	path = src/control/ros2_robotiq_gripper
+	url = git@github.com:peterdavidfagan/ros2_robotiq_gripper.git
