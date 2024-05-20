@@ -1,6 +1,7 @@
 import os
 from launch import LaunchDescription
 from launch.actions import OpaqueFunction, IncludeLaunchDescription, DeclareLaunchArgument
+from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.launch_description_sources import load_python_launch_file_as_module
 from launch.substitutions import (
@@ -33,7 +34,7 @@ def generate_launch_description():
 
     use_fake_hardware = DeclareLaunchArgument(
         "use_fake_hardware",
-        default_value="false",
+        default_value="true",
         description="Use fake hardware",
     )
 
@@ -51,11 +52,18 @@ def generate_launch_description():
             .to_moveit_configs()
             )
 
-    panda_controller_config = os.path.join(
-        get_package_share_directory("franka_robotiq_moveit_config"),
-        "config",
-        "panda_controllers.yaml",
-    )
+    if IfCondition(LaunchConfiguration("use_fake_hardware")):
+        panda_controller_config = os.path.join(
+                get_package_share_directory("franka_robotiq_moveit_config"),
+                "config",
+                "panda_controllers_mujoco.yaml",
+            )
+    else:
+        panda_controller_config = os.path.join(
+            get_package_share_directory("franka_robotiq_moveit_config"),
+            "config",
+            "panda_controllers.yaml",
+        )
 
     panda_control_node = Node(
         package="controller_manager",
@@ -65,35 +73,58 @@ def generate_launch_description():
         namespace="panda"
     )
 
-
-    # set up controller manager for robotiq grippe under namespace robotiq
+    # set up controller manager for robotiq gripper under namespace robotiq
     robotiq_xacro = os.path.join(
             get_package_share_directory("robotiq_description"),
             "urdf",
             "robotiq_2f_85_gripper.urdf.xacro",
             )
 
-    robot_description_content = Command(
-        [
-            PathJoinSubstitution([FindExecutable(name="xacro")]),
-            " ",
-            robotiq_xacro,
-            " ",
-            "use_fake_hardware:=false",
-        ]
-    )
-
-    robotiq_description_param = {
-        "robot_description": launch_ros.parameter_descriptions.ParameterValue(
-            robot_description_content, value_type=str
+    if IfCondition(LaunchConfiguration("use_fake_hardware")):
+        robot_description_content = Command(
+            [
+                PathJoinSubstitution([FindExecutable(name="xacro")]),
+                " ",
+                robotiq_xacro,
+                " ",
+                "use_fake_hardware:=true",
+            ]
         )
-    }
 
-    robotiq_controller_config = os.path.join(
-        get_package_share_directory("franka_robotiq_moveit_config"),
-        "config",
-        "robotiq_controllers.yaml",
-    )
+        robotiq_description_param = {
+            "robot_description": launch_ros.parameter_descriptions.ParameterValue(
+                robot_description_content, value_type=str
+            )
+        }
+        
+        robotiq_controller_config = os.path.join(
+            get_package_share_directory("franka_robotiq_moveit_config"),
+            "config",
+            "robotiq_controllers_mujoco.yaml",
+        )
+
+    else:
+        robot_description_content = Command(
+            [
+                PathJoinSubstitution([FindExecutable(name="xacro")]),
+                " ",
+                robotiq_xacro,
+                " ",
+                "use_fake_hardware:=false",
+            ]
+        )
+
+        robotiq_description_param = {
+            "robot_description": launch_ros.parameter_descriptions.ParameterValue(
+                robot_description_content, value_type=str
+            )
+        }
+
+        robotiq_controller_config = os.path.join(
+            get_package_share_directory("franka_robotiq_moveit_config"),
+            "config",
+            "robotiq_controllers.yaml",
+        )
 
     robotiq_control_node = Node(
         package="controller_manager",
@@ -105,8 +136,10 @@ def generate_launch_description():
 
     load_panda_controllers = []
     for controller in [
-        'panda_jtc_controller',
-        'panda_state_broadcaster',
+        'joint_state_broadcaster',
+        'joint_impedance_example_controller',
+        # 'joint_trajectory_controller'
+        #'gravity_compensation_example_controller',
     ]:
         load_panda_controllers += [
             ExecuteProcess(
@@ -115,12 +148,13 @@ def generate_launch_description():
                 output="screen",
             )
         ]
+    
     load_robotiq_controllers = []
-    for controller in [
-        'robotiq_gripper_controller',
-        'robotiq_activation_controller',
-        'robotiq_state_broadcaster',
-    ]:
+    robotiq_controllers = ['robotiq_gripper_controller','robotiq_state_broadcaster',] 
+    if not IfCondition(LaunchConfiguration("use_fake_hardware")):
+        robotiq_controllers = robotiq_controllers + ['robotiq_activation_controller']
+
+    for controller in robotiq_controllers:
         load_robotiq_controllers += [
             ExecuteProcess(
                 cmd=["ros2 run controller_manager spawner {} -c /robotiq/controller_manager".format(controller)],
