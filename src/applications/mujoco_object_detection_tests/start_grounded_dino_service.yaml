@@ -1,0 +1,14 @@
+version: "3"
+
+services: 
+  control_server:
+   image: ghcr.io/peterdavidfagan/panda_object_detection:humble
+    container_name: object_detection
+    build: 
+      context: ../../../../
+      dockerfile: .docker/object_detection/Dockerfile
+    devices:
+      - "/dev:/dev"
+    privileged: true
+    network_mode: "host"
+    command: python3 ./src/object_detection/ros2_object_detection_components/ros2_object_detection_components/grounded_dino.py  
