@@ -68,3 +68,6 @@
 [submodule "src/control/ros2_robotiq_gripper"]
 	path = src/control/ros2_robotiq_gripper
 	url = git@github.com:peterdavidfagan/ros2_robotiq_gripper.git
+[submodule "src/object_detection/ros2_object_detection"]
+	path = src/object_detection/ros2_object_detection
+	url = git@github.com:peterdavidfagan/ros2_object_detection.git
