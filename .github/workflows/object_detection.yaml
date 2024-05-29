@@ -28,6 +28,14 @@ jobs:
           submodules: recursive
           token: ${{ secrets.ORG_PAT }}
 
+      - name: Free Space
+        run: |
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /opt/hostedtoolcache
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+          sudo rm -rf ${GITHUB_WORKSPACE}/.git
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       
