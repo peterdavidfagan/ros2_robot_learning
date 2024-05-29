@@ -1,0 +1,33 @@
+version: "3"
+
+services: 
+  zed_camera:
+    mage: ghcr.io/peterdavidfagan/zed2:humble
+    build: 
+      context: ../../../../
+      dockerfile: .docker/cameras/Dockerfile.zed
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    volumes:
+      - ./config/zed2i.yaml:/root/zed_ws/src/cameras/zed_wrapper/config/zed2i.yaml
+    devices:
+      - "/dev:/dev"
+    network_mode: "host"
+    privileged: true
+    runtime: nvidia
+    command: ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zed2i node_name:=zed_camera
+
+  motion_planning_prerequisites:
+    image: ghcr.io/peterdavidfagan/panda_motion_planning:humble
+    build: 
+      context: ../../../../
+      dockerfile: .docker/motion_planning/Dockerfile.motion_planning
+    environment:
+      - DISPLAY=${DISPLAY}
+      - XAUTHORITY=${DOCKER_XAUTH}
+    volumes:
+      - /tmp/.X11-unix:/tml/.X11-unix:rw
+      #- ${DOCKER_XAUTH}:${DOCKER_XAUTH}
+      - ../../applications:/root/panda_ws/src/applications
+    network_mode: "host"
+    command: ros2 launch panda_motion_planning_demos motion_planning_prerequisites.launch.pyi
