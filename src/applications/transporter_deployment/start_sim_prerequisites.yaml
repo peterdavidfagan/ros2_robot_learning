@@ -1,0 +1,50 @@
+version: "3"
+
+services: 
+  control_server:
+    image: ghcr.io/peterdavidfagan/panda_control:humble
+    container_name: control_server
+    build: 
+      context: ../../../../
+      dockerfile: .docker/control/Dockerfile.control
+    devices:
+      - "/dev:/dev"
+    privileged: true
+    cap_add:
+      - SYS_NICE
+    ulimits:
+      rtprio: 70
+      rttime: -1 # corresponds to 'unlimited'
+      memlock: 8428281856
+    network_mode: "host"
+    command: ros2 launch panda_control_demos franka_robotiq.launch.py use_fake_hardware:=true
+
+  motion_planning_prerequisites:
+    image: ghcr.io/peterdavidfagan/panda_motion_planning:humble
+    build: 
+      context: ../../../../
+      dockerfile: .docker/motion_planning/Dockerfile.motion_planning
+    environment:
+      - DISPLAY=${DISPLAY}
+    volumes:
+      - /tmp/.X11-unix:/tml/.X11-unix:rw
+      - ../../applications:/root/panda_ws/src/applications
+    network_mode: "host"
+    command: ros2 launch panda_motion_planning_demos motion_planning_prerequisites.launch.py
+
+  object_detection:
+    image: ghcr.io/peterdavidfagan/object_detection:humble
+    container_name: object_detection
+    build: 
+      context: ../../
+      dockerfile: .docker/object_detection/Dockerfile
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    devices:
+      - "/dev:/dev"
+    privileged: true
+    runtime: nvidia
+    network_mode: "host"
+    command: python3 ./src/object_detection/ros2_object_detection/ros2_object_detection_components/ros2_object_detection_components/grounded_dino.py
+
+ 

@@ -7,19 +7,13 @@ import mujoco.viewer
 import mujoco_ros
 from mujoco_ros.franka_env import FrankaEnv
 
-model_filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'mujoco_models', 'apples.mjb')
+model_filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'mujoco_models', 'rearrangement.mjb')
 
 if __name__=="__main__":
     m = mujoco.MjModel.from_binary_path(model_filepath)
     d = mujoco.MjData(m)
-    with mujoco.viewer.launch_passive(
-        model=m, 
-        data=d,
-        show_left_ui=False,
-        show_right_ui=False,
-        ) as viewer:
-        # instaniate mujoco_ros environment
-        env = FrankaEnv(
+
+    env = FrankaEnv(
             m, 
             d, 
             command_interface="effort",
@@ -27,6 +21,13 @@ if __name__=="__main__":
             control_timer_freq=1e-2,
             )
 
+    with mujoco.viewer.launch_passive(
+        model=m, 
+        data=d,
+        show_left_ui=False,
+        show_right_ui=False,
+        ) as viewer:
+        
         # run interactive viewer application
         while viewer.is_running():
             time.sleep(0.05)
