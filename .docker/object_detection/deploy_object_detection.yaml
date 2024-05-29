@@ -1,7 +1,7 @@
 version: "3"
 
 services: 
-  calibration_app:
+  object_detection:
     image: ghcr.io/peterdavidfagan/object_detection:humble
     container_name: object_detection
     build: 

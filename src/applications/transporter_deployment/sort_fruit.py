@@ -1,7 +1,6 @@
 """Application for sorting fruit objects."""
 from robot_workspaces.franka_table import FrankaTable 
 
-
 def sort_apples(config):
     """
     Demonstrate apple sorting with basic object detection.
@@ -9,7 +8,7 @@ def sort_apples(config):
     env = FrankaTable(config)
     env.reset()
     domain_model = env.props_info()
-    
+
     for prop in domain_model:
         pixel_coords = [prop.bbox[2]//2, prop.bbox[3]//2]
         pick_pose = env.pixel_to_world()

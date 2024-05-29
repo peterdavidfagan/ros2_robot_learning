@@ -30,4 +30,19 @@ services:
       #- ${DOCKER_XAUTH}:${DOCKER_XAUTH}
       - ../../applications:/root/panda_ws/src/applications
     network_mode: "host"
-    command: ros2 launch panda_motion_planning_demos motion_planning_prerequisites.launch.pyi
+    command: ros2 launch panda_motion_planning_demos motion_planning_prerequisites.launch.py
+
+  object_detection:
+    image: ghcr.io/peterdavidfagan/object_detection:humble
+    container_name: object_detection
+    build: 
+      context: ../../
+      dockerfile: .docker/object_detection/Dockerfile
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    devices:
+      - "/dev:/dev"
+    privileged: true
+    runtime: nvidia
+    network_mode: "host"
+    command: python3 ./src/object_detection/ros2_object_detection/ros2_object_detection_components/ros2_object_detection_components/grounded_dino.py
