@@ -24,9 +24,6 @@
 [submodule "src/llm/ros2_dspy"]
 	path = src/llm/ros2_dspy
 	url = git@github.com:peterdavidfagan/ros2_dspy.git
-[submodule "src/llm/ros2_dspy_msgs"]
-	path = src/llm/ros2_dspy_msgs
-	url = git@github.com:peterdavidfagan/ros2_dspy_msgs.git
 [submodule "src/mujoco/mujoco_ros"]
 	path = src/mujoco/mujoco_ros
 	url = git@github.com:peterdavidfagan/mujoco_ros.git
