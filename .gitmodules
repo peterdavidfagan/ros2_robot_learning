@@ -18,9 +18,6 @@
 [submodule "src/grasping/ros2_deep_grasps"]
 	path = src/grasping/ros2_deep_grasps
 	url = git@github.com:peterdavidfagan/ros2_deep_grasps.git
-[submodule "src/grasping/ros2_deep_grasps_interfaces"]
-	path = src/grasping/ros2_deep_grasps_interfaces
-	url = git@github.com:peterdavidfagan/ros2_deep_grasps_interfaces.git
 [submodule "src/llm/ros2_dspy"]
 	path = src/llm/ros2_dspy
 	url = git@github.com:peterdavidfagan/ros2_dspy.git
