@@ -1,10 +1,6 @@
 [submodule "src/audio/ros2_whisper"]
 	path = src/audio/ros2_whisper
 	url = git@github.com:peterdavidfagan/ros2_whisper.git
-[submodule "src/cameras/image_pipeline"]
-	path = src/cameras/image_pipeline
-	url = git@github.com:ros-perception/image_pipeline.git
-	branch = humble
 [submodule "src/control/serial"]
 	path = src/control/serial
 	url = git@github.com:tylerjw/serial.git
