@@ -9,7 +9,10 @@ from ament_index_python.packages import get_package_share_directory
 import numpy as np
 from scipy.spatial.transform import Rotation as R
 import scipy.spatial.transform as st
+from scipy.interpolate import griddata
 import dm_env
+from cv_bridge import CvBridge
+import cv2
 
 import rclpy
 from rclpy.action import ActionClient
@@ -73,14 +76,14 @@ class GripperClient(Node):
     def close_gripper(self):
         goal = GripperCommand.Goal()
         goal.command.position = 0.8
-        goal.command.max_effort = 3.0
+        goal.command.max_effort = 5.0
         self.gripper_action_client.wait_for_server()
         return self.gripper_action_client.send_goal_async(goal)
 
     def open_gripper(self):
         goal = GripperCommand.Goal()
         goal.command.position = 0.0
-        goal.command.max_effort = 3.0
+        goal.command.max_effort = 5.0
         self.gripper_action_client.wait_for_server()
         return self.gripper_action_client.send_goal_async(goal)
 
@@ -91,9 +94,11 @@ class FrankaTable(Node, dm_env.Environment):
     """
 
     def __init__(self, config):
-        super().__init__("transporter deployment")
+        super().__init__("transporter_deployment")
+        self.logger = self.get_logger()
         self.config = config 
         self.robotiq_tcp_z_offset = config['robot']['gripper_tcp_offset']
+        self.dino_confidence_threshold = config['grounded_dino']['confidence_threshold']
         self.dino_prompts = config['grounded_dino']['prompts']
         
         # set up motion planning client
@@ -107,16 +112,16 @@ class FrankaTable(Node, dm_env.Environment):
                     })
             .robot_description_semantic("config/panda.srdf.xacro", 
                 mappings={
-                    "robotiq_gripper": use_gripper,
+                    "robotiq_gripper": self.config['robot']['use_gripper'],
                     })
             .trajectory_execution("config/moveit_controllers.yaml")
             .moveit_cpp(
                 file_path=get_package_share_directory("panda_motion_planning_demos")
-                + "/config/moveit_cpp.yaml"
+                + "/config/moveit_cpp_mujoco.yaml"
             )
             .to_moveit_configs()
             ).to_dict()
-
+        
         # create clients for moveit motion planning
         self.panda = MoveItPy(config_dict=moveit_config)
         self.planning_scene_monitor = self.panda.get_planning_scene_monitor()
@@ -153,9 +158,10 @@ class FrankaTable(Node, dm_env.Environment):
             scene.current_state.update()  # Important to ensure the scene is updated
 
         # instantiate grounded dino client
-        self.grounded_dino_detection_client = self.create_client(DetectObjectGroundedDino, 'grounded_dino_object_detection')
+        self.grounded_dino_detection_client = self.create_client(DetectObjectGroundedDino, 'grounded_dino_detect_object')
 
         # set up camera 
+        self.cv_bridge = CvBridge()
         self.camera_callback_group = ReentrantCallbackGroup()
         self.camera_qos_profile = QoSProfile(
                 depth=1,
@@ -205,9 +211,10 @@ class FrankaTable(Node, dm_env.Environment):
             ]
         rotation = st.Rotation.from_quat(quaternion).as_matrix()
         self.camera_extrinsics = np.eye(4)
+        # self.camera_extrinsics[:3, :3] = rotation
+        # self.camera_extrinsics[:3, 3] = translation
         self.camera_extrinsics[:3, :3] = rotation
         self.camera_extrinsics[:3, 3] = translation
-
         # TODO: load transporter models for pick/place inference
 
         self.mode="pick"
@@ -285,32 +292,20 @@ class FrankaTable(Node, dm_env.Environment):
         self.depth_img = self.cv_bridge.imgmsg_to_cv2(depth, "32FC1") # check encoding
 
     def pixel_2_world(self, coords):
-        depth_img = self.depth_image.copy()
-        u = coords[0]
+        """
+        Note: first coordinate must by u, second v.
+        """
+        depth_img = self.depth_img.copy()
+        u = coords[0] 
         v = coords[1]
-        
-        # start by inpainting depth values (sometimes sensor returns nan/inf)
-        nan_mask = np.isnan(depth_img)
-        inf_mask = np.isinf(depth_img)
-        mask = np.logical_or(nan_mask, inf_mask)
-        mask = cv2.UMat(mask.astype(np.uint8))
-        scale = np.ma.masked_invalid(np.abs(depth_img)).max() # scale to keep as float, but has to be in bounds -1:1 to keep opencv happy.
-        depth_img = depth_img.astype(np.float32) / scale  # Has to be float32, 64 not supported.
-        depth_img = cv2.inpaint(depth_img, mask, 1, cv2.INPAINT_NS)
-
-        # interpolate remaining nan values with nearest neighbor
-        depth_img = np.array(depth_img.get())
-        y, x = np.where(~np.isnan(depth_img))
-        x_range, y_range = np.meshgrid(np.arange(depth_img.shape[1]), np.arange(depth_img.shape[0]))
-        depth_img = griddata((x, y), depth_img[y, x], (x_range, y_range), method='nearest')
-        depth_img = depth_img * scale 
-        depth_val = depth_img[v, u]
+        depth_val = depth_img[v, u] # indexing change as v corresponds to rows, and u columns
 
         # convert current pixels coordinates to camera frame coordinates
         pixel_coords = np.array([u, v])
         image_coords = np.concatenate([pixel_coords, np.ones(1)])
         camera_coords =  np.linalg.inv(self.camera_intrinsics) @ image_coords
-        camera_coords *= depth_val # negate depth when using mujoco camera convention
+        camera_coords *= depth_val
+        #camera_coords *= -depth_val # negate depth when using mujoco camera convention
 
         # convert camera coordinates to world coordinates
         camera_coords = np.concatenate([camera_coords, np.ones(1)])
@@ -320,6 +315,8 @@ class FrankaTable(Node, dm_env.Environment):
         return world_coords
 
     def request_grounded_dino_detections(self, confidence_threshold, prompt):
+        self.logger.info("requesting dino detections")
+
         # formulate the request
         request = DetectObjectGroundedDino.Request()
         request.confidence_threshold = confidence_threshold
@@ -328,6 +325,7 @@ class FrankaTable(Node, dm_env.Environment):
         # send the request
         self.future = self.grounded_dino_detection_client.call_async(request)
         rclpy.spin_until_future_complete(self, self.future)
+        self.logger.info("finished dino detection")
         return self.future.result()
 
     # TODO: add camera intrinsics/extrinsics here
@@ -340,7 +338,7 @@ class FrankaTable(Node, dm_env.Environment):
         props_info = {}
         for prompt in self.dino_prompts:
             # get detected objects from grounded dino
-            self.detections = self.request_grounded_dino_detections(confidence_threshold, prompt)
+            self.detections = self.request_grounded_dino_detections(self.dino_confidence_threshold, prompt).bounding_boxes
 
             # for each detection store bounding box and label
             for idx, bbox in enumerate(self.detections):

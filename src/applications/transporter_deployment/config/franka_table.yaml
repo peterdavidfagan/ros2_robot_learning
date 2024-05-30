@@ -1,33 +1,40 @@
 workspace:
   table_height_offset: 0.0
+  target_locations:
+    a_red_apple:
+      location: [0.55, 0.3, 0.4]
+      size: [0.075, 0.15, 0.01] 
+    a_green_apple:
+        location: [0.55, -0.4, 0.4]
+        size: [0.075, 0.15, 0.01] 
 
 robot:
-  ip: 192.168.106.99
-  use_fake_hardware: false
-  use_gripper: false
-  gripper_controller: /robotiq/robotiq_gripper_controller/gripper_cmd
+  ip: ''
+  use_fake_hardware: 'true'
+  use_gripper: 'true'
+  gripper_controller: '/robotiq/robotiq_gripper_controller/gripper_cmd'
   gripper_tcp_offset: 0.17
 
 camera:
-  rgb_topic: /zed/zed_camera/rgb/image_rect_color
-  depth_topic: /zed/zed_camera/depth/depth_registered
+  rgb_topic: '/overhead_camera_rgb'
+  depth_topic: '/overhead_camera_depth'
 
   intrinsics:
-    fx: 523.4645385742188
-    fy: 523.4645385742188
-    cx: 561.8798828125
-    cy: 309.3200378417969   
+    fx: -407.43914864
+    fy: 407.43914864
+    cx: 319.5
+    cy: 319.5 
 
   extrinsics:
-    x: 1.04322964
-    y: -0.11564952
-    z: 0.84412144
-    qx: 0.67835388
-    qy: 0.63676566
-    qz: -0.22833043
-    qw: -0.28675899  
+    x: 0.7
+    y: 0.0
+    z: 1.3
+    qx: 0.0
+    qy: 0.0
+    qz: -0.707
+    qw: 0.707 
 
 grounded_dino:
+  confidence_threshold: 0.1
   prompts:
-    - a red apple
-    - a green apple
+    - a red apple.
