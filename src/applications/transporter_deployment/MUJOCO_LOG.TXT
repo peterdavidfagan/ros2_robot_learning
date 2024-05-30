@@ -1,0 +1,3 @@
+Thu May 30 09:39:14 2024
+ERROR: mj_setPtrData: mjData buffer size mismatch, expected size: 2099296,  actual size: 355543010346496
+

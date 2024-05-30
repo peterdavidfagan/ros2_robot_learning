@@ -138,7 +138,7 @@ def generate_launch_description():
     for controller in [
         'joint_state_broadcaster',
         'joint_impedance_example_controller',
-        # 'joint_trajectory_controller'
+        'joint_trajectory_controller'
         #'gravity_compensation_example_controller',
     ]:
         load_panda_controllers += [
@@ -151,7 +151,7 @@ def generate_launch_description():
     
     load_robotiq_controllers = []
     robotiq_controllers = ['robotiq_gripper_controller','robotiq_state_broadcaster',] 
-    if not IfCondition(LaunchConfiguration("use_fake_hardware")):
+    if not IfCondition(LaunchConfiguration("use_fake_hardware")):    
         robotiq_controllers = robotiq_controllers + ['robotiq_activation_controller']
 
     for controller in robotiq_controllers:
