@@ -137,7 +137,7 @@ def generate_launch_description():
     load_panda_controllers = []
     for controller in [
         'joint_state_broadcaster',
-        'joint_impedance_example_controller',
+        #'joint_impedance_example_controller',
         'joint_trajectory_controller'
         #'gravity_compensation_example_controller',
     ]:
