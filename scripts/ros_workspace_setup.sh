@@ -64,7 +64,7 @@ cd ../..
 if $poetry_build; then
 	[ -e poetry.lock ] && rm poetry.lock
 	poetry install
-	poetry shell
+	source $(poetry env info --path)/bin/activate
 else
 	source .venv/bin/activate
 fi
