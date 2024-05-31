@@ -24,25 +24,46 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "3.10.6"
 numpy = "^1.16.0"
+notebook = "^7.0.0"
 scipy = "^1.13.0"
-tensorflow-cpu = {version="2.15.0", markers = "sys_platform == 'linux'"}
-envlogger = {version="^1.1", extras=["tfds"], markers = "sys_platform == 'linux'"}
-tensorflow-datasets = "4.9.3"
-rlds = {version="^0.1.7", markers = "sys_platform == 'linux'"}
 catkin-pkg = "^1.0.0"
 empy = "3.3.4"
 lark = "^1.1.9"
 dspy-ai = "^2.4.9"
 pyqt6 = "^6.7.0"
+
+[tool.poetry.group.dm_env]
+optional = true
+
+[tool.poetry.group.dm_env.dependencies]
 dm_env = "1.6"
-opencv-python = "4.6.0.66" 
-opencv-contrib-python = "4.6.0.66" 
-cvbridge3 = "^1.1"
 onnx = "^1.16.0"
 onnxruntime = "^1.17.3"
 einops = "^0.8.0"
 jaxlib = "^0.4.26"
 jax = "^0.4.26"
+
+[tool.poetry.group.camera]
+optional = true
+
+[tool.poetry.group.camera.dependencies]
+opencv-python = "4.6.0.66" 
+opencv-contrib-python = "4.6.0.66" 
+cvbridge3 = "^1.1"
+
+[tool.poetry.group.transporter_data]
+optional = true
+
+[tool.poetry.group.transporter_data.dependencies]
+tensorflow-cpu = {version="2.15.0", markers = "sys_platform == 'linux'"}
+envlogger = {version="^1.1", extras=["tfds"], markers = "sys_platform == 'linux'"}
+tensorflow-datasets = "4.9.3"
+rlds = {version="^0.1.7", markers = "sys_platform == 'linux'"}
+
+[tool.poetry.group.huggingface]
+optional = true
+
+[tool.poetry.group.huggingface.dependencies]
 huggingface-hub = "^0.23.0"
 transformers = "^4.41.1"
 torch = "^2.3.0"
