@@ -52,25 +52,28 @@ def generate_launch_description():
             .to_moveit_configs()
             )
 
-    if IfCondition(LaunchConfiguration("use_fake_hardware")):
-        panda_controller_config = os.path.join(
-                get_package_share_directory("franka_robotiq_moveit_config"),
-                "config",
-                "panda_controllers_mujoco.yaml",
-            )
-    else:
-        panda_controller_config = os.path.join(
-            get_package_share_directory("franka_robotiq_moveit_config"),
-            "config",
-            "panda_controllers.yaml",
-        )
-
     panda_control_node = Node(
         package="controller_manager",
         executable="ros2_control_node",
-        parameters=[moveit_config.robot_description, panda_controller_config],
+        parameters=[
+            moveit_config.robot_description,
+            os.path.join(get_package_share_directory("franka_robotiq_moveit_config"), "config", "panda_controllers.yaml"),
+            ],
         output="both",
-        namespace="panda"
+        namespace="panda",
+        condition=UnlessCondition(LaunchConfiguration('use_fake_hardware'))
+    )
+
+    panda_control_node_mj = Node(
+        package="controller_manager",
+        executable="ros2_control_node",
+        parameters=[
+            moveit_config.robot_description,
+            os.path.join(get_package_share_directory("franka_robotiq_moveit_config"), "config", "panda_controllers_mujoco.yaml"),
+            ],
+        output="both",
+        namespace="panda",
+        condition=IfCondition(LaunchConfiguration('use_fake_hardware'))
     )
 
     # set up controller manager for robotiq gripper under namespace robotiq
@@ -80,88 +83,83 @@ def generate_launch_description():
             "robotiq_2f_85_gripper.urdf.xacro",
             )
 
-    if IfCondition(LaunchConfiguration("use_fake_hardware")):
-        robot_description_content = Command(
-            [
-                PathJoinSubstitution([FindExecutable(name="xacro")]),
-                " ",
-                robotiq_xacro,
-                " ",
-                "use_fake_hardware:=true",
-            ]
-        )
+    robot_description_content = Command(
+        [
+            PathJoinSubstitution([FindExecutable(name="xacro")]),
+            " ",
+            robotiq_xacro,
+            " ",
+            "use_fake_hardware:=",
+            LaunchConfiguration('use_fake_hardware'),
+        ]
+    )
 
-        robotiq_description_param = {
-            "robot_description": launch_ros.parameter_descriptions.ParameterValue(
-                robot_description_content, value_type=str
-            )
-        }
-        
-        robotiq_controller_config = os.path.join(
-            get_package_share_directory("franka_robotiq_moveit_config"),
-            "config",
-            "robotiq_controllers_mujoco.yaml",
+    robotiq_description_param = {
+        "robot_description": launch_ros.parameter_descriptions.ParameterValue(
+            robot_description_content, value_type=str
         )
-
-    else:
-        robot_description_content = Command(
-            [
-                PathJoinSubstitution([FindExecutable(name="xacro")]),
-                " ",
-                robotiq_xacro,
-                " ",
-                "use_fake_hardware:=false",
-            ]
-        )
-
-        robotiq_description_param = {
-            "robot_description": launch_ros.parameter_descriptions.ParameterValue(
-                robot_description_content, value_type=str
-            )
-        }
-
-        robotiq_controller_config = os.path.join(
-            get_package_share_directory("franka_robotiq_moveit_config"),
-            "config",
-            "robotiq_controllers.yaml",
-        )
+    }
 
     robotiq_control_node = Node(
         package="controller_manager",
         executable="ros2_control_node",
-        parameters=[robotiq_description_param, robotiq_controller_config],
+        parameters=[
+            robotiq_description_param,
+            os.path.join(get_package_share_directory("franka_robotiq_moveit_config"), "config", "robotiq_controllers.yaml",)
+            ],
         output="both",
         namespace="robotiq",
+        condition=UnlessCondition(LaunchConfiguration('use_fake_hardware'))
+    )
+
+    robotiq_control_node_mj = Node(
+        package="controller_manager",
+        executable="ros2_control_node",
+        parameters=[
+            robotiq_description_param,
+            os.path.join(get_package_share_directory("franka_robotiq_moveit_config"), "config", "robotiq_controllers_mujoco.yaml",)
+            ],
+        output="both",
+        namespace="robotiq",
+        condition=IfCondition(LaunchConfiguration('use_fake_hardware'))
     )
 
     load_panda_controllers = []
-    for controller in [
-        'joint_state_broadcaster',
-        #'joint_impedance_example_controller',
-        'joint_trajectory_controller'
-        #'gravity_compensation_example_controller',
-    ]:
-        load_panda_controllers += [
-            ExecuteProcess(
-                cmd=["ros2 run controller_manager spawner {} -c /panda/controller_manager".format(controller)],
-                shell=True,
-                output="screen",
-            )
-        ]
-    
-    load_robotiq_controllers = []
-    robotiq_controllers = ['robotiq_gripper_controller','robotiq_state_broadcaster',] 
-    if not IfCondition(LaunchConfiguration("use_fake_hardware")):    
-        robotiq_controllers = robotiq_controllers + ['robotiq_activation_controller']
+    for controller in [                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+        'joint_state_broadcaster',                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+        'joint_trajectory_controller'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+        #'joint_impedance_example_controller',                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+        #'gravity_compensation_example_controller',                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+    ]:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+        load_panda_controllers += [                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+            ExecuteProcess(                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+                cmd=["ros2 run controller_manager spawner {} -c /panda/controller_manager".format(controller)],                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+                shell=True,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+                output="screen",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+            )                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+        ]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+    load_robotiq_controllers = []                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+    robotiq_controllers = ['robotiq_gripper_controller','robotiq_state_broadcaster', 'robotiq_activation_controller']                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+    for controller in robotiq_controllers:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+        if controller == 'robotiq_activation_controller':                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+            load_robotiq_controllers += [                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                ExecuteProcess(                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+                    cmd=["ros2 run controller_manager spawner {} -c /robotiq/controller_manager".format(controller)],                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                    shell=True,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+                    output="screen",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+                    condition=UnlessCondition(LaunchConfiguration('use_fake_hardware'))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                )                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+            ]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+        else:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
 
-    for controller in robotiq_controllers:
-        load_robotiq_controllers += [
-            ExecuteProcess(
-                cmd=["ros2 run controller_manager spawner {} -c /robotiq/controller_manager".format(controller)],
-                shell=True,
-                output="screen",
-            )
-        ]
+            load_robotiq_controllers += [
+                ExecuteProcess(
+                    cmd=["ros2 run controller_manager spawner {} -c /robotiq/controller_manager".format(controller)],
+                    shell=True,
+                    output="screen",
+                )
+            ]
 
     return LaunchDescription(
         [
