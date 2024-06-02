@@ -110,5 +110,6 @@ def generate_launch_description():
         [
             use_fake_hardware,
             robotiq_control_node,
+            robotiq_control_node_mj,
         ] + load_robotiq_controllers
         )
