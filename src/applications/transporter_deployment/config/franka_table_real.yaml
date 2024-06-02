@@ -2,11 +2,8 @@ workspace:
   table_height_offset: 0.0
   target_locations:
     a_red_apple:
-      location: [0.35, 0.0, 0.15]
+      location: [0.35, 0.0, 0.3]
       size: [0.025, 0.025, 0.01] 
-    a_green_apple:
-        location: [0.55, -0.4, 0.15]
-        size: [0.025, 0.025, 0.01] 
 
 robot:
   ip: '192.168.106.99'
@@ -26,13 +23,13 @@ camera:
     cy: 309.3200378417969   
 
   extrinsics:
-    x: 1.04322964
-    y: -0.11564952
-    z: 0.84412144
-    qx: 0.67835388
-    qy: 0.63676566
-    qz: -0.22833043
-    qw: -0.28675899  
+    x: 1.1357451
+    y: -0.05703823
+    z: 0.83214218
+    qx: 0.64914152
+    qy: 0.62559443
+    qz: -0.26746816
+    qw: -0.34015832  
     
 grounded_dino:
   confidence_threshold: 0.1
