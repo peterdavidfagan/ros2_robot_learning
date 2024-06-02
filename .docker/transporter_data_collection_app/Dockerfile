@@ -47,7 +47,7 @@ ENV PYENV_ROOT /pyenv
 RUN /pyenv/bin/pyenv install 3.10.6
 RUN eval "$(/pyenv/bin/pyenv init -)" && /pyenv/bin/pyenv local 3.10.6 && pip install numpy poetry setuptools wheel six auditwheel
 RUN mkdir -p .venv
-RUN eval "$(/pyenv/bin/pyenv init -)" && /pyenv/bin/pyenv local 3.10.6 && poetry config virtualenvs.in-project true --local && poetry install
+RUN eval "$(/pyenv/bin/pyenv init -)" && /pyenv/bin/pyenv local 3.10.6 && poetry config virtualenvs.in-project true --local && poetry install --only main,dm_env,camera,transporter_data,huggingface
 
 # install moveit repo deps
 RUN cd ./src/motion_planning && \
