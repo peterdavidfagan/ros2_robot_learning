@@ -1,0 +1,20 @@
+version: "3"
+
+services: 
+  control_server:
+   image: ghcr.io/peterdavidfagan/panda_control:humble
+   container_name: control_server
+   build: 
+     context: ../../../../
+     dockerfile: .docker/control/Dockerfile.control
+   devices:
+     - "/dev:/dev"
+   privileged: true
+   cap_add:
+     - SYS_NICE
+   ulimits:
+     rtprio: 70
+     rttime: -1 # corresponds to 'unlimited'
+     memlock: 8428281856
+   network_mode: "host"
+   command: ros2 launch panda_control_demos robotiq.launch.py use_fake_hardware:=false
