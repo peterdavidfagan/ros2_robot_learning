@@ -44,13 +44,13 @@ ENV PYENV_ROOT /pyenv
 RUN /pyenv/bin/pyenv install 3.10.6
 RUN eval "$(/pyenv/bin/pyenv init -)" && /pyenv/bin/pyenv local 3.10.6 && pip install numpy poetry setuptools wheel six auditwheel
 RUN mkdir -p .venv
-RUN eval "$(/pyenv/bin/pyenv init -)" && /pyenv/bin/pyenv local 3.10.6 && poetry config virtualenvs.in-project true --local && poetry install --only camera,huggingface
+RUN eval "$(/pyenv/bin/pyenv init -)" && /pyenv/bin/pyenv local 3.10.6 && poetry config virtualenvs.in-project true --local && poetry install --only main,camera,huggingface
 
 # set up workspace           
 RUN . .venv/bin/activate && \
     . /opt/ros/${ROS_DISTRO}/setup.sh && \
     apt-get update && \
-    apt-get install -y ros-${ROS_DISTRO}-rmw-cyclonedds-cpp python-empy && \
+    apt-get install -y ros-${ROS_DISTRO}-rmw-cyclonedds-cpp && \
     pip uninstall em && \
     rosdep update && \
     DEBIAN_FRONTEND=noninteractive \
