@@ -106,5 +106,6 @@ def generate_launch_description():
             use_gripper,
             use_fake_hardware,
             panda_control_node, 
+            panda_control_node_mj,
         ] + load_panda_controllers
         )
