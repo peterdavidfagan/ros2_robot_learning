@@ -1,0 +1,23 @@
+# config/zed2i_yaml
+# Parameters for Stereoabs zed2i camera
+---
+/**:
+    ros__parameters:
+        general:
+            camera_model: 'zed2i'
+            camera_name: 'zed2i' # usually overwritten by launch file
+            serial_number: 35215462
+            grab_resolution: 'HD2K' # The native camera grab resolution. 'HD2K', 'HD1080', 'HD720', 'VGA', 'AUTO'
+            grab_frame_rate: 30 # ZED SDK internal grabbing rate
+            pub_frame_rate: 5.0 
+
+        depth:
+            depth_mode: 'ULTRA'
+            depth_confidence: 50
+            min_depth: 0.2 # Min: 0.2, Max: 3.0
+            max_depth: 10.0 # Max: 40.0
+
+        pos_tracking:
+            set_as_static: true
+            initial_base_pose: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0] # Initial position of the `camera_link` frame in the map -> [X, Y, Z, R, P, Y]
+
