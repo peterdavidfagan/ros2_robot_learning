@@ -1,9 +1,13 @@
 """A basic debug/poc of identifying fruits with dino and sorting them."""
+import os
 import yaml
 import numpy as np
 import rclpy
 from robot_workspaces.franka_table import FrankaTable 
 from scipy.spatial.transform import Rotation as R
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+yaml_file_path = os.path.join(script_dir, 'config', 'franka_table_real.yaml')
 
 def sort_apples(config):
     """
@@ -72,7 +76,7 @@ def sort_apples(config):
     env.close()
 
 def main(args=None):
-    with open('./config/franka_table_real.yaml', 'r') as file:
+    with open(yaml_file_path, 'r') as file:
         config = yaml.safe_load(file)
     
     rclpy.init(args=args)
