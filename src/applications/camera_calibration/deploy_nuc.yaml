@@ -17,5 +17,5 @@ services:
      rttime: -1 # corresponds to 'unlimited'
      memlock: 8428281856
    network_mode: "host"
-   command: ros2 launch panda_control_demos franka_robotiq.launch.py use_fake_hardware:=false
+   command: ros2 launch panda_control_demos franka.launch.py use_fake_hardware:=false
 
