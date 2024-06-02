@@ -1,9 +1,9 @@
 version: "3"
 
 services: 
-  control_server:
+  robotiq_control_server:
    image: ghcr.io/peterdavidfagan/panda_control:humble
-   container_name: control_server
+   container_name: robotiq_control_server
    build: 
      context: ../../../../
      dockerfile: .docker/control/Dockerfile.control
