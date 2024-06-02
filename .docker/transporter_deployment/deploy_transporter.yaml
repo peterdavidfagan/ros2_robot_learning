@@ -1,0 +1,17 @@
+version: "3"
+
+services: 
+  calibration_app:
+    image: ghcr.io/peterdavidfagan/transporter_deployment:humble
+    container_name: transporter_deployment
+    build: 
+      context: ../../
+      dockerfile: .docker/transporter_deployment/Dockerfile
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    devices:
+      - "/dev:/dev"
+    privileged: true
+    runtime: nvidia
+    network_mode: "host"
+    command: python3 ./src/applications/transporter_deployment/sort_fruit.py
