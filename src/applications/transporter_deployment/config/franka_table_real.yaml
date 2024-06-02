@@ -13,7 +13,7 @@ robot:
   use_fake_hardware: 'false'
   use_gripper: 'true'
   gripper_controller: '/robotiq/robotiq_gripper_controller/gripper_cmd'
-  gripper_tcp_offset: 0.15
+  gripper_tcp_offset: 0.17
 
 camera:
   rgb_topic: '/zed/zed_camera/rgb/image_rect_color'
