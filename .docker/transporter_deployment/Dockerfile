@@ -34,7 +34,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
 # set up ROS workspace
 ENV ROS_UNDERLAY /root/transporter_deployment_ws/install
 WORKDIR $ROS_UNDERLAY/..
-COPY src/cameras/moveit2_camera_calibration ./src/cameras/moveit2_camera_calibration # remove later contains image_pipeline
+COPY src/cameras/moveit2_camera_calibration ./src/cameras/moveit2_camera_calibration 
+COPY src/object_detection ./src/object_detection
 COPY src/motion_planning ./src/motion_planning
 COPY src/applications ./src/applications
 COPY src/control/franka_ros2/franka_description ./src/control/franka_ros2/franka_description
