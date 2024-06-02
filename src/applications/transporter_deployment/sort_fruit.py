@@ -72,7 +72,7 @@ def sort_apples(config):
     env.close()
 
 def main(args=None):
-    with open('./config/franka_table.yaml', 'r') as file:
+    with open('./config/franka_table_real.yaml', 'r') as file:
         config = yaml.safe_load(file)
     
     rclpy.init(args=args)
