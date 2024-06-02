@@ -1,6 +1,18 @@
 version: "3"
 
 services: 
+  gripper_control_server:
+   image: ghcr.io/peterdavidfagan/panda_control:humble
+   container_name: control_server
+   build: 
+     context: ../../../../
+     dockerfile: .docker/control/Dockerfile.control
+   devices:
+     - "/dev:/dev"
+   privileged: true
+   network_mode: "host"
+   command: ros2 launch panda_control_demos robotiq.launch.py use_fake_hardware:=false
+   
   zed_camera:
     image: ghcr.io/peterdavidfagan/zed2:humble
     container_name: zed_camera
