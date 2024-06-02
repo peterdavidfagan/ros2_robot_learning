@@ -24,10 +24,8 @@ services:
       dockerfile: .docker/motion_planning/Dockerfile.motion_planning
     environment:
       - DISPLAY=${DISPLAY}
-      - XAUTHORITY=${DOCKER_XAUTH}
     volumes:
       - /tmp/.X11-unix:/tml/.X11-unix:rw
-      #- ${DOCKER_XAUTH}:${DOCKER_XAUTH}
       - ../../applications:/root/panda_ws/src/applications
     network_mode: "host"
     command: ros2 launch panda_motion_planning_demos motion_planning_prerequisites.launch.py
@@ -45,4 +43,21 @@ services:
     privileged: true
     runtime: nvidia
     network_mode: "host"
-    command: python3 ./src/object_detection/ros2_object_detection/ros2_object_detection_components/ros2_object_detection_components/grounded_dino.py
+    command: python3 ./src/object_detection/ros2_object_detection/ros2_object_detection_components/ros2_object_detection_components/grounded_dino.py --topic=/zed/zed_camera/rgb/image_rect_color
+
+  transporter_deployment:
+    image: ghcr.io/peterdavidfagan/transporter_deployment:humble
+    build: 
+      context: ../../../../
+      dockerfile: .docker/transporter_deployment/Dockerfile
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - DISPLAY=${DISPLAY}
+    volumes:
+      - /tmp/.X11-unix:/tml/.X11-unix:rw
+      - ./../../data_collection:/root/data_collection_ws/src/data_collection
+      - ./../../motion_planning:/root/data_collection_ws/src/motion_planning
+      - ./../../applications:/root/data_collection_ws/src/applications
+    network_mode: "host"
+    runtime: nvidia
+    command: python3 src/applications/transporter_deployment/sort_fruit.py
