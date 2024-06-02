@@ -106,18 +106,18 @@ class FrankaTable(Node, dm_env.Environment):
             MoveItConfigsBuilder(robot_name="panda", package_name="franka_robotiq_moveit_config")
             .robot_description(file_path=get_package_share_directory("franka_robotiq_description") + "/urdf/robot.urdf.xacro",
                 mappings={
-                    "robot_ip": self.config['robot']['ip'],
-                    "robotiq_gripper": self.config['robot']['use_gripper'],
-                    "use_fake_hardware": self.config['robot']['use_fake_hardware'],
+                    "robot_ip": str(self.config['robot']['ip']),
+                    "robotiq_gripper": str(self.config['robot']['use_gripper']),
+                    "use_fake_hardware": str(self.config['robot']['use_fake_hardware']),
                     })
             .robot_description_semantic("config/panda.srdf.xacro", 
                 mappings={
-                    "robotiq_gripper": self.config['robot']['use_gripper'],
+                    "robotiq_gripper": str(self.config['robot']['use_gripper']),
                     })
             .trajectory_execution("config/moveit_controllers.yaml")
             .moveit_cpp(
                 file_path=get_package_share_directory("panda_motion_planning_demos")
-                + "/config/moveit_cpp_mujoco.yaml"
+                + "/config/moveit_cpp.yaml"
             )
             .to_moveit_configs()
             ).to_dict()
