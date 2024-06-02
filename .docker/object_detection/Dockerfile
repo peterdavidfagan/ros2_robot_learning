@@ -35,7 +35,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
 ENV ROS_UNDERLAY /root/object_detection_ws/install
 WORKDIR $ROS_UNDERLAY/..
 COPY src/object_detection ./src/object_detection
-COPY src/applications ./src/applications
+COPY src/applications/transporter_deployment ./src/applications/transporter_deployment
 COPY pyproject.toml .
 
 # install python virtual environment
