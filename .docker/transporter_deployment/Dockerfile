@@ -37,7 +37,7 @@ WORKDIR $ROS_UNDERLAY/..
 COPY src/cameras/moveit2_camera_calibration ./src/cameras/moveit2_camera_calibration 
 COPY src/object_detection ./src/object_detection
 COPY src/motion_planning ./src/motion_planning
-COPY src/applications ./src/applications
+COPY src/applications/transporter_deployment ./src/applications/transporter_deployment
 COPY src/control/franka_ros2/franka_description ./src/control/franka_ros2/franka_description
 COPY src/control/ros2_robotiq_gripper/robotiq_description ./src/control/ros2_robotiq_gripper/robotiq_description
 COPY pyproject.toml .
