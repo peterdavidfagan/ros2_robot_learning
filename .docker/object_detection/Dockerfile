@@ -51,7 +51,6 @@ RUN . .venv/bin/activate && \
     . /opt/ros/${ROS_DISTRO}/setup.sh && \
     apt-get update && \
     apt-get install -y ros-${ROS_DISTRO}-rmw-cyclonedds-cpp && \
-    pip uninstall em && \
     rosdep update && \
     DEBIAN_FRONTEND=noninteractive \
     rosdep install --from-paths src --ignore-src -r -y --rosdistro ${ROS_DISTRO} && \
