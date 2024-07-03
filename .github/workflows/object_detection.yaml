@@ -53,7 +53,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          platforms: linux/amd64
+          platforms: linux/amd64, linux/arm64
           file: .docker/object_detection/Dockerfile
           push: true
           no-cache: true
